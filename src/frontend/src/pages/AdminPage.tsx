@@ -22,12 +22,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import {
   ArrowLeft,
   KeyRound,
   Loader2,
+  LogOut,
   Pencil,
   Plus,
   Sprout,
@@ -40,7 +40,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import type { Sticker } from "../backend.d";
 import StickerFormModal from "../components/StickerFormModal";
-import { useActor } from "../hooks/useActor";
+import { useInternetIdentity } from "../hooks/useInternetIdentity";
 import { useLogin } from "../hooks/useLogin";
 import {
   useAllStickers,
@@ -49,29 +49,32 @@ import {
   useSeedStickers,
   useToggleFeatured,
 } from "../hooks/useQueries";
+import { getSessionParameter, storeSessionParameter } from "../utils/urlParams";
 
 export default function AdminPage() {
   const { login, loginStatus, identity } = useLogin();
+  const { clear: logout } = useInternetIdentity();
+
   // Identity is available both after a fresh login (loginStatus === "success")
   // and after returning from the Internet Identity redirect (loginStatus === "idle"
   // but identity is restored from localStorage). Both cases count as logged in.
   const isLoggedIn = !!identity && !identity.getPrincipal().isAnonymous();
+  const isInitializing = loginStatus === "initializing";
 
   const { data: isAdmin, isLoading: isLoadingAdmin } = useIsAdmin();
   const { data: stickers, isLoading: isLoadingStickers } = useAllStickers();
   const seedMutation = useSeedStickers();
   const deleteMutation = useDeleteSticker();
   const toggleFeaturedMutation = useToggleFeatured();
-  const { actor } = useActor();
-  const queryClient = useQueryClient();
 
   const [addOpen, setAddOpen] = useState(false);
   const [editSticker, setEditSticker] = useState<Sticker | null>(null);
 
-  // Admin password unlock state
-  const [adminPassword, setAdminPassword] = useState("");
-  const [unlockLoading, setUnlockLoading] = useState(false);
-  const [unlockError, setUnlockError] = useState("");
+  // Pre-login admin token entry state
+  const [adminTokenInput, setAdminTokenInput] = useState(
+    getSessionParameter("caffeineAdminToken") ?? "",
+  );
+  const [tokenError, setTokenError] = useState("");
 
   const handleSeed = async () => {
     try {
@@ -100,71 +103,25 @@ export default function AdminPage() {
     }
   };
 
-  const handleUnlock = async (e: React.FormEvent) => {
+  /**
+   * Step 1 (not logged in): user enters their admin token, we save it to
+   * sessionStorage, then trigger the login redirect.  When Internet Identity
+   * returns, useActor picks up the token from sessionStorage and registers the
+   * principal as admin on first contact with the backend.
+   */
+  const handleTokenAndLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!actor || !adminPassword.trim()) return;
-    setUnlockLoading(true);
-    setUnlockError("");
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await (actor as any)._initializeAccessControlWithSecret(adminPassword);
-      await queryClient.invalidateQueries({ queryKey: ["isAdmin"] });
-      await queryClient.refetchQueries({ queryKey: ["isAdmin"] });
-      const updatedIsAdmin = queryClient.getQueryData<boolean>(["isAdmin"]);
-      if (!updatedIsAdmin) {
-        setUnlockError("Incorrect password or admin access already claimed.");
-      }
-    } catch {
-      setUnlockError("Incorrect password or admin access already claimed.");
-    } finally {
-      setUnlockLoading(false);
+    const token = adminTokenInput.trim();
+    if (!token) {
+      setTokenError("Please enter your admin token.");
+      return;
     }
+    storeSessionParameter("caffeineAdminToken", token);
+    login();
   };
 
-  // Not logged in
-  if (!isLoggedIn) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-4">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="cozy-card p-10 text-center max-w-md w-full"
-        >
-          <div className="text-5xl mb-4">🔒</div>
-          <h1 className="font-display text-2xl font-semibold text-foreground mb-2">
-            Sign In Required
-          </h1>
-          <p className="font-body text-muted-foreground mb-6">
-            Please sign in to access the admin panel.
-          </p>
-          <Button
-            onClick={login}
-            disabled={loginStatus === "logging-in"}
-            className="rounded-2xl font-body gap-2 bg-primary text-primary-foreground w-full"
-          >
-            {loginStatus === "logging-in" ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" /> Signing in...
-              </>
-            ) : (
-              "Sign In"
-            )}
-          </Button>
-          <div className="mt-4">
-            <Link
-              to="/"
-              className="font-body text-sm text-muted-foreground hover:text-primary transition-colors flex items-center justify-center gap-1"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" /> Back to shop
-            </Link>
-          </div>
-        </motion.div>
-      </div>
-    );
-  }
-
-  // Loading admin check
-  if (isLoadingAdmin) {
+  // Still resolving the stored identity — show a spinner
+  if (isInitializing) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -172,8 +129,13 @@ export default function AdminPage() {
     );
   }
 
-  // Not admin — show password unlock form
-  if (!isAdmin) {
+  // ── STATE A: not logged in ──────────────────────────────────────────────
+  // Collect the admin token FIRST, then redirect to Internet Identity.
+  // This ensures useActor receives the real token and registers the principal
+  // as admin on first call — before any empty-string registration can happen.
+  if (!isLoggedIn) {
+    const hasSavedToken = !!getSessionParameter("caffeineAdminToken");
+
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-4">
         <motion.div
@@ -185,62 +147,130 @@ export default function AdminPage() {
             <KeyRound className="w-7 h-7 text-primary" />
           </div>
           <h1 className="font-display text-2xl font-semibold text-foreground mb-2">
-            Admin Access
+            Admin Sign In
           </h1>
           <p className="font-body text-muted-foreground mb-6">
-            Enter the admin password to unlock the dashboard.
+            {hasSavedToken
+              ? "Token saved. Click below to sign in."
+              : "Enter your admin token, then sign in to continue."}
           </p>
 
-          <form onSubmit={handleUnlock} className="space-y-4 text-left">
+          <form onSubmit={handleTokenAndLogin} className="space-y-4 text-left">
             <div className="space-y-1.5">
               <Label
-                htmlFor="admin-password"
+                htmlFor="admin-token"
                 className="font-body text-sm text-foreground/70"
               >
-                Admin Password
+                Admin Token
               </Label>
               <Input
-                id="admin-password"
+                id="admin-token"
                 data-ocid="admin.input"
                 type="password"
-                placeholder="Enter admin password…"
-                value={adminPassword}
+                placeholder="Paste your CAFFEINE_ADMIN_TOKEN…"
+                value={adminTokenInput}
                 onChange={(e) => {
-                  setAdminPassword(e.target.value);
-                  setUnlockError("");
+                  setAdminTokenInput(e.target.value);
+                  setTokenError("");
                 }}
                 className="rounded-xl font-body border-border focus-visible:ring-primary"
-                autoComplete="current-password"
-                disabled={unlockLoading}
+                autoComplete="off"
+                disabled={loginStatus === "logging-in"}
               />
+              <p className="font-body text-xs text-muted-foreground">
+                Find this in your Caffeine project settings as{" "}
+                <code className="bg-muted px-1 py-0.5 rounded text-foreground/80">
+                  CAFFEINE_ADMIN_TOKEN
+                </code>
+                .
+              </p>
             </div>
 
-            {unlockError && (
+            {tokenError && (
               <p
                 data-ocid="admin.error_state"
                 className="font-body text-sm text-destructive text-center"
               >
-                {unlockError}
+                {tokenError}
               </p>
             )}
 
             <Button
               data-ocid="admin.submit_button"
               type="submit"
-              disabled={unlockLoading || !adminPassword.trim()}
+              disabled={loginStatus === "logging-in"}
               className="rounded-2xl font-body gap-2 bg-primary text-primary-foreground w-full"
             >
-              {unlockLoading ? (
+              {loginStatus === "logging-in" ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" /> Unlocking…
+                  <Loader2 className="w-4 h-4 animate-spin" /> Signing in…
                 </>
               ) : (
                 <>
-                  <KeyRound className="w-4 h-4" /> Unlock
+                  <KeyRound className="w-4 h-4" /> Save Token & Sign In
                 </>
               )}
             </Button>
           </form>
+
+          <div className="mt-5">
+            <Link
+              to="/"
+              data-ocid="admin.link"
+              className="font-body text-sm text-muted-foreground hover:text-primary transition-colors flex items-center justify-center gap-1"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" /> Back to shop
+            </Link>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
+
+  // ── Loading admin check ─────────────────────────────────────────────────
+  if (isLoadingAdmin) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  // ── STATE D: logged in but NOT admin ───────────────────────────────────
+  // This happens when the user previously signed in without a token and got
+  // registered as a plain user.  They must sign out and sign in again using
+  // the token form above.
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center px-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="cozy-card p-10 text-center max-w-md w-full"
+        >
+          <div className="text-5xl mb-4">🔒</div>
+          <h1 className="font-display text-2xl font-semibold text-foreground mb-2">
+            Admin Access Required
+          </h1>
+          <p className="font-body text-muted-foreground mb-2">
+            Your account doesn&apos;t have admin privileges.
+          </p>
+          <p className="font-body text-sm text-muted-foreground mb-6">
+            This can happen if you signed in before entering the admin token.
+            Please sign out and sign in again — make sure to enter your{" "}
+            <code className="bg-muted px-1 py-0.5 rounded text-foreground/80">
+              CAFFEINE_ADMIN_TOKEN
+            </code>{" "}
+            first.
+          </p>
+
+          <Button
+            data-ocid="admin.primary_button"
+            onClick={logout}
+            className="rounded-2xl font-body gap-2 bg-primary text-primary-foreground w-full"
+          >
+            <LogOut className="w-4 h-4" /> Sign Out &amp; Try Again
+          </Button>
 
           <div className="mt-5">
             <Link

@@ -210,13 +210,5 @@ export function getSecretFromHash(paramName: string): string | null {
  * @returns The secret value if found, null otherwise
  */
 export function getSecretParameter(paramName: string): string | null {
-  // Check the URL hash first; if not found, fall back to sessionStorage.
-  // The fallback is critical after an Internet Identity redirect, where the
-  // hash is replaced and the token can only be recovered from sessionStorage
-  // (stored by useLogin before the redirect happened).
-  const fromHash = getSecretFromHash(paramName);
-  if (fromHash !== null) {
-    return fromHash;
-  }
-  return getSessionParameter(paramName);
+  return getSecretFromHash(paramName);
 }
