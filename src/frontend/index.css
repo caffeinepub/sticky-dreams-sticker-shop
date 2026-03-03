@@ -1,0 +1,195 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Font Face Declarations ─────────────────────────────────────────────── */
+@font-face {
+  font-family: "Fraunces";
+  src: url("/assets/fonts/Fraunces.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Figtree";
+  src: url("/assets/fonts/Figtree.woff2") format("woff2");
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Bricolage Grotesque";
+  src: url("/assets/fonts/BricolageGrotesque.woff2") format("woff2");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  :root {
+    --radius: 1rem;
+
+    /* ── Warm Cozy Palette: Blush + Peach + Lavender + Cream ─── */
+    --background: 0.97 0.012 60;
+    --foreground: 0.22 0.04 30;
+
+    --card: 0.99 0.006 50;
+    --card-foreground: 0.22 0.04 30;
+
+    --popover: 0.995 0.004 50;
+    --popover-foreground: 0.22 0.04 30;
+
+    /* Primary: warm blush rose */
+    --primary: 0.62 0.18 10;
+    --primary-foreground: 0.99 0.005 50;
+
+    /* Secondary: soft peach */
+    --secondary: 0.93 0.04 60;
+    --secondary-foreground: 0.28 0.06 30;
+
+    /* Muted: creamy neutral */
+    --muted: 0.94 0.018 55;
+    --muted-foreground: 0.52 0.03 40;
+
+    /* Accent: lavender purple */
+    --accent: 0.88 0.06 310;
+    --accent-foreground: 0.28 0.08 300;
+
+    /* Destructive */
+    --destructive: 0.57 0.22 25;
+    --destructive-foreground: 0.99 0 0;
+
+    --border: 0.88 0.025 50;
+    --input: 0.9 0.02 55;
+    --ring: 0.62 0.18 10;
+
+    /* Charts */
+    --chart-1: 0.68 0.16 10;
+    --chart-2: 0.74 0.12 60;
+    --chart-3: 0.72 0.1 310;
+    --chart-4: 0.78 0.1 145;
+    --chart-5: 0.65 0.15 200;
+
+    /* Sidebar */
+    --sidebar: 0.97 0.012 60;
+    --sidebar-foreground: 0.22 0.04 30;
+    --sidebar-primary: 0.62 0.18 10;
+    --sidebar-primary-foreground: 0.99 0.005 50;
+    --sidebar-accent: 0.88 0.06 310;
+    --sidebar-accent-foreground: 0.28 0.08 300;
+    --sidebar-border: 0.88 0.025 50;
+    --sidebar-ring: 0.62 0.18 10;
+
+    /* Custom extras */
+    --peach: 0.82 0.12 55;
+    --lavender: 0.78 0.1 310;
+    --mint: 0.85 0.08 155;
+    --blush: 0.9 0.06 15;
+    --cream: 0.97 0.015 65;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    @apply font-display;
+  }
+}
+
+/* ─── Custom Utilities ───────────────────────────────────────────────────── */
+@layer utilities {
+  .cozy-card {
+    @apply bg-card rounded-3xl shadow-cozy border border-border transition-all duration-300;
+  }
+
+  .cozy-card:hover {
+    @apply shadow-cozy-hover -translate-y-1;
+  }
+
+  .gradient-hero {
+    background: linear-gradient(
+      105deg,
+      oklch(0.97 0.02 25 / 0.96) 0%,
+      oklch(0.96 0.03 20 / 0.92) 30%,
+      oklch(0.93 0.04 340 / 0.6) 60%,
+      oklch(0.9 0.05 310 / 0.1) 100%
+    );
+  }
+
+  .gradient-section {
+    background: linear-gradient(
+      160deg,
+      oklch(0.97 0.012 60) 0%,
+      oklch(0.95 0.025 30) 40%,
+      oklch(0.96 0.02 310) 100%
+    );
+  }
+
+  .gradient-featured {
+    background: linear-gradient(
+      135deg,
+      oklch(0.96 0.04 30) 0%,
+      oklch(0.94 0.06 310) 100%
+    );
+  }
+
+  .text-gradient {
+    background: linear-gradient(
+      135deg,
+      oklch(0.55 0.2 10),
+      oklch(0.55 0.15 310)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .noise-bg::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .sticker-pop {
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+      box-shadow 0.25s ease;
+  }
+
+  .sticker-pop:hover {
+    transform: scale(1.04) rotate(-1deg);
+    box-shadow: 0 12px 40px oklch(0.62 0.18 10 / 0.2);
+  }
+}
+
+/* ─── Scrollbar Styling ──────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: oklch(0.95 0.015 50);
+}
+
+::-webkit-scrollbar-thumb {
+  background: oklch(0.8 0.06 15);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.7 0.1 10);
+}
