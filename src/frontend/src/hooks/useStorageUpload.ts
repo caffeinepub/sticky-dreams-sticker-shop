@@ -1,7 +1,4 @@
-import { HttpAgent } from "@icp-sdk/core/agent";
 import { useCallback, useState } from "react";
-import { loadConfig } from "../config";
-import { StorageClient } from "../utils/StorageClient";
 
 interface UseStorageUploadResult {
   uploadFile: (file: File) => Promise<string>;
@@ -28,27 +25,25 @@ export function useStorageUpload(): UseStorageUploadResult {
     setUploadError(null);
 
     try {
-      const config = await loadConfig();
-      const agent = await HttpAgent.create({
-        host: config.backend_host ?? "https://icp0.io",
+      // Convert the image to a base64 data URL so it works without blob storage
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onprogress = (e) => {
+          if (e.lengthComputable) {
+            setUploadProgress(Math.round((e.loaded / e.total) * 90));
+          }
+        };
+        reader.onload = () => {
+          resolve(reader.result as string);
+        };
+        reader.onerror = () => {
+          reject(new Error("Failed to read image file"));
+        };
+        reader.readAsDataURL(file);
       });
 
-      const storageClient = new StorageClient(
-        config.bucket_name ?? "default-bucket",
-        config.storage_gateway_url,
-        config.backend_canister_id,
-        config.project_id,
-        agent,
-      );
-
-      const bytes = new Uint8Array(await file.arrayBuffer());
-      const { hash } = await storageClient.putFile(bytes, (pct) => {
-        setUploadProgress(pct);
-      });
-
-      const url = await storageClient.getDirectURL(hash);
       setUploadProgress(100);
-      return url;
+      return dataUrl;
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Upload failed. Please try again.";

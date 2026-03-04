@@ -31,63 +31,63 @@
   :root {
     --radius: 1rem;
 
-    /* ── Warm Cozy Palette: Blush + Peach + Lavender + Cream ─── */
-    --background: 0.97 0.012 60;
-    --foreground: 0.22 0.04 30;
+    /* ── Light Funny Eye-Comfort Palette: Cream + Sunny Yellow + Mint ─── */
+    --background: 0.98 0.008 90;
+    --foreground: 0.18 0.04 55;
 
-    --card: 0.99 0.006 50;
-    --card-foreground: 0.22 0.04 30;
+    --card: 0.995 0.005 80;
+    --card-foreground: 0.18 0.04 55;
 
-    --popover: 0.995 0.004 50;
-    --popover-foreground: 0.22 0.04 30;
+    --popover: 0.998 0.003 80;
+    --popover-foreground: 0.18 0.04 55;
 
-    /* Primary: warm blush rose */
-    --primary: 0.62 0.18 10;
-    --primary-foreground: 0.99 0.005 50;
+    /* Primary: warm sunny yellow-orange */
+    --primary: 0.72 0.18 65;
+    --primary-foreground: 0.12 0.04 50;
 
-    /* Secondary: soft peach */
-    --secondary: 0.93 0.04 60;
-    --secondary-foreground: 0.28 0.06 30;
+    /* Secondary: soft lemon */
+    --secondary: 0.95 0.06 90;
+    --secondary-foreground: 0.22 0.06 55;
 
-    /* Muted: creamy neutral */
-    --muted: 0.94 0.018 55;
-    --muted-foreground: 0.52 0.03 40;
+    /* Muted: warm neutral */
+    --muted: 0.95 0.012 80;
+    --muted-foreground: 0.5 0.03 60;
 
-    /* Accent: lavender purple */
-    --accent: 0.88 0.06 310;
-    --accent-foreground: 0.28 0.08 300;
+    /* Accent: mint green */
+    --accent: 0.88 0.08 160;
+    --accent-foreground: 0.2 0.08 150;
 
     /* Destructive */
     --destructive: 0.57 0.22 25;
     --destructive-foreground: 0.99 0 0;
 
-    --border: 0.88 0.025 50;
-    --input: 0.9 0.02 55;
-    --ring: 0.62 0.18 10;
+    --border: 0.9 0.02 80;
+    --input: 0.92 0.015 85;
+    --ring: 0.72 0.18 65;
 
     /* Charts */
-    --chart-1: 0.68 0.16 10;
-    --chart-2: 0.74 0.12 60;
-    --chart-3: 0.72 0.1 310;
-    --chart-4: 0.78 0.1 145;
-    --chart-5: 0.65 0.15 200;
+    --chart-1: 0.72 0.18 65;
+    --chart-2: 0.68 0.14 155;
+    --chart-3: 0.65 0.12 200;
+    --chart-4: 0.75 0.14 85;
+    --chart-5: 0.62 0.16 30;
 
     /* Sidebar */
-    --sidebar: 0.97 0.012 60;
-    --sidebar-foreground: 0.22 0.04 30;
-    --sidebar-primary: 0.62 0.18 10;
-    --sidebar-primary-foreground: 0.99 0.005 50;
-    --sidebar-accent: 0.88 0.06 310;
-    --sidebar-accent-foreground: 0.28 0.08 300;
-    --sidebar-border: 0.88 0.025 50;
-    --sidebar-ring: 0.62 0.18 10;
+    --sidebar: 0.98 0.008 90;
+    --sidebar-foreground: 0.18 0.04 55;
+    --sidebar-primary: 0.72 0.18 65;
+    --sidebar-primary-foreground: 0.12 0.04 50;
+    --sidebar-accent: 0.88 0.08 160;
+    --sidebar-accent-foreground: 0.2 0.08 150;
+    --sidebar-border: 0.9 0.02 80;
+    --sidebar-ring: 0.72 0.18 65;
 
     /* Custom extras */
-    --peach: 0.82 0.12 55;
-    --lavender: 0.78 0.1 310;
-    --mint: 0.85 0.08 155;
-    --blush: 0.9 0.06 15;
-    --cream: 0.97 0.015 65;
+    --sunny: 0.88 0.18 80;
+    --mint: 0.88 0.08 160;
+    --lemon: 0.95 0.06 90;
+    --cream: 0.98 0.008 90;
+    --tangerine: 0.75 0.2 50;
   }
 
   * {
@@ -120,36 +120,32 @@
   .gradient-hero {
     background: linear-gradient(
       105deg,
-      oklch(0.97 0.02 25 / 0.96) 0%,
-      oklch(0.96 0.03 20 / 0.92) 30%,
-      oklch(0.93 0.04 340 / 0.6) 60%,
-      oklch(0.9 0.05 310 / 0.1) 100%
+      oklch(0.98 0.04 85 / 0.96) 0%,
+      oklch(0.97 0.06 80 / 0.92) 30%,
+      oklch(0.93 0.05 155 / 0.4) 60%,
+      oklch(0.9 0.04 160 / 0.05) 100%
     );
   }
 
   .gradient-section {
     background: linear-gradient(
       160deg,
-      oklch(0.97 0.012 60) 0%,
-      oklch(0.95 0.025 30) 40%,
-      oklch(0.96 0.02 310) 100%
+      oklch(0.98 0.008 90) 0%,
+      oklch(0.96 0.04 85) 40%,
+      oklch(0.94 0.05 155) 100%
     );
   }
 
   .gradient-featured {
     background: linear-gradient(
       135deg,
-      oklch(0.96 0.04 30) 0%,
-      oklch(0.94 0.06 310) 100%
+      oklch(0.95 0.07 85) 0%,
+      oklch(0.91 0.08 155) 100%
     );
   }
 
   .text-gradient {
-    background: linear-gradient(
-      135deg,
-      oklch(0.55 0.2 10),
-      oklch(0.55 0.15 310)
-    );
+    background: linear-gradient(135deg, oklch(0.58 0.2 65), oklch(0.5 0.15 155));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -171,7 +167,7 @@
 
   .sticker-pop:hover {
     transform: scale(1.04) rotate(-1deg);
-    box-shadow: 0 12px 40px oklch(0.62 0.18 10 / 0.2);
+    box-shadow: 0 12px 40px oklch(0.72 0.18 65 / 0.25);
   }
 }
 
@@ -182,14 +178,14 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: oklch(0.95 0.015 50);
+  background: oklch(0.96 0.01 85);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: oklch(0.8 0.06 15);
+  background: oklch(0.82 0.12 75);
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.7 0.1 10);
+  background: oklch(0.72 0.18 65);
 }

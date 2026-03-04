@@ -11,22 +11,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { ImagePlus, Loader2, Upload, X } from "lucide-react";
+import { ImagePlus, Loader2, Upload, Video, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import type { Sticker } from "../backend.d";
 import { useAddSticker, useUpdateSticker } from "../hooks/useQueries";
 import { useStorageUpload } from "../hooks/useStorageUpload";
-
-const CATEGORIES = ["Cute Animals", "Floral", "Fun Phrases", "Seasonal"];
+import { getVideoUrl } from "../utils/stickerHelpers";
 
 interface StickerFormModalProps {
   open: boolean;
@@ -35,15 +27,22 @@ interface StickerFormModalProps {
   mode: "add" | "edit";
 }
 
-const defaultForm: Omit<Sticker, "id" | "createdAt"> = {
+interface FormState {
+  title: string;
+  description: string;
+  category: string;
+  imageUrl: string;
+  featured: boolean;
+  videoUrl: string;
+}
+
+const defaultForm: FormState = {
   title: "",
   description: "",
-  price: "",
   category: "",
   imageUrl: "",
-  amazonLink: "",
-  pinterestLink: "",
   featured: false,
+  videoUrl: "",
 };
 
 export default function StickerFormModal({
@@ -52,11 +51,16 @@ export default function StickerFormModal({
   sticker,
   mode,
 }: StickerFormModalProps) {
-  const [form, setForm] = useState(defaultForm);
+  const [form, setForm] = useState<FormState>(defaultForm);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [videoPreviewUrl, setVideoPreviewUrl] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
+  const [isUploadingVideo, setIsUploadingVideo] = useState(false);
+  const [videoUploadProgress, setVideoUploadProgress] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
 
   const addMutation = useAddSticker();
   const updateMutation = useUpdateSticker();
@@ -64,7 +68,10 @@ export default function StickerFormModal({
     useStorageUpload();
 
   const isPending =
-    addMutation.isPending || updateMutation.isPending || isUploading;
+    addMutation.isPending ||
+    updateMutation.isPending ||
+    isUploading ||
+    isUploadingVideo;
 
   // Reset form when sticker changes
   useEffect(() => {
@@ -72,29 +79,38 @@ export default function StickerFormModal({
       setForm({
         title: sticker.title,
         description: sticker.description,
-        price: sticker.price,
         category: sticker.category,
         imageUrl: sticker.imageUrl,
-        amazonLink: sticker.amazonLink,
-        pinterestLink: sticker.pinterestLink,
         featured: sticker.featured,
+        videoUrl: getVideoUrl(sticker),
       });
       setPreviewUrl(sticker.imageUrl || null);
+      setVideoPreviewUrl(getVideoUrl(sticker) || null);
     } else {
       setForm(defaultForm);
       setPreviewUrl(null);
+      setVideoPreviewUrl(null);
     }
     setImageFile(null);
+    setVideoFile(null);
     resetUpload();
   }, [sticker, resetUpload]);
 
-  // Create / revoke object URL for selected file
+  // Create / revoke object URL for selected image file
   useEffect(() => {
     if (!imageFile) return;
     const url = URL.createObjectURL(imageFile);
     setPreviewUrl(url);
     return () => URL.revokeObjectURL(url);
   }, [imageFile]);
+
+  // Create / revoke object URL for selected video file
+  useEffect(() => {
+    if (!videoFile) return;
+    const url = URL.createObjectURL(videoFile);
+    setVideoPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [videoFile]);
 
   const handleFileSelect = (file: File) => {
     if (!file.type.startsWith("image/")) {
@@ -109,10 +125,27 @@ export default function StickerFormModal({
     resetUpload();
   };
 
+  const handleVideoFileSelect = (file: File) => {
+    if (!file.type.startsWith("video/")) {
+      toast.error("Please select a video file (MP4, WEBM, MOV, etc.)");
+      return;
+    }
+    if (file.size > 50 * 1024 * 1024) {
+      toast.error("Video must be smaller than 50 MB");
+      return;
+    }
+    setVideoFile(file);
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) handleFileSelect(file);
-    // Reset input so same file can be selected again
+    e.target.value = "";
+  };
+
+  const handleVideoInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) handleVideoFileSelect(file);
     e.target.value = "";
   };
 
@@ -137,31 +170,79 @@ export default function StickerFormModal({
     resetUpload();
   };
 
+  const clearVideo = () => {
+    setVideoFile(null);
+    setVideoPreviewUrl(null);
+    setForm((prev) => ({ ...prev, videoUrl: "" }));
+  };
+
+  // Upload video file to get data URL
+  const uploadVideoFile = async (file: File): Promise<string> => {
+    setIsUploadingVideo(true);
+    setVideoUploadProgress(0);
+    try {
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onprogress = (e) => {
+          if (e.lengthComputable) {
+            setVideoUploadProgress(Math.round((e.loaded / e.total) * 90));
+          }
+        };
+        reader.onload = () => {
+          setVideoUploadProgress(100);
+          resolve(reader.result as string);
+        };
+        reader.onerror = () => reject(new Error("Failed to read video file"));
+        reader.readAsDataURL(file);
+      });
+      return dataUrl;
+    } finally {
+      setIsUploadingVideo(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       let finalImageUrl = form.imageUrl;
+      let finalVideoUrl = form.videoUrl;
 
-      // Upload new file if one was selected
+      // Upload new image if one was selected
       if (imageFile) {
         finalImageUrl = await uploadFile(imageFile);
-        setForm((prev) => ({ ...prev, imageUrl: finalImageUrl }));
+      }
+
+      // Upload new video if one was selected
+      if (videoFile) {
+        finalVideoUrl = await uploadVideoFile(videoFile);
       }
 
       if (mode === "add") {
         const newSticker: Sticker = {
-          ...form,
+          title: form.title,
+          description: form.description,
+          category: form.category,
           imageUrl: finalImageUrl,
+          featured: form.featured,
           id: crypto.randomUUID(),
           createdAt: BigInt(Date.now()),
+          price: finalVideoUrl, // videoUrl stored in price field
+          amazonLink: "",
+          pinterestLink: "",
         };
         await addMutation.mutateAsync(newSticker);
         toast.success("Sticker added! 🎉");
       } else if (sticker) {
         await updateMutation.mutateAsync({
           ...sticker,
-          ...form,
+          title: form.title,
+          description: form.description,
+          category: form.category,
           imageUrl: finalImageUrl,
+          featured: form.featured,
+          price: finalVideoUrl, // videoUrl stored in price field
+          amazonLink: "",
+          pinterestLink: "",
         });
         toast.success("Sticker updated! ✨");
       }
@@ -175,11 +256,12 @@ export default function StickerFormModal({
     }
   };
 
-  const update = (field: keyof typeof form, value: string | boolean) => {
+  const update = <K extends keyof FormState>(field: K, value: FormState[K]) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
   const hasImage = !!previewUrl || !!form.imageUrl;
+  const hasVideo = !!videoPreviewUrl || !!form.videoUrl;
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
@@ -209,7 +291,7 @@ export default function StickerFormModal({
               data-ocid="sticker_form.title_input"
               value={form.title}
               onChange={(e) => update("title", e.target.value)}
-              placeholder="e.g. Fluffy Bunny Sticker"
+              placeholder="e.g. Laughing Emoji Sticker"
               required
               className="rounded-xl font-body"
             />
@@ -235,46 +317,20 @@ export default function StickerFormModal({
             />
           </div>
 
-          {/* Price + Category row */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1.5">
-              <Label htmlFor="price" className="font-body font-medium text-sm">
-                Price *
-              </Label>
-              <Input
-                id="price"
-                data-ocid="sticker_form.price_input"
-                value={form.price}
-                onChange={(e) => update("price", e.target.value)}
-                placeholder="$4.99"
-                required
-                className="rounded-xl font-body"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label className="font-body font-medium text-sm">
-                Category *
-              </Label>
-              <Select
-                value={form.category}
-                onValueChange={(v) => update("category", v)}
-                required
-              >
-                <SelectTrigger
-                  data-ocid="sticker_form.category_input"
-                  className="rounded-xl font-body"
-                >
-                  <SelectValue placeholder="Select..." />
-                </SelectTrigger>
-                <SelectContent className="rounded-2xl font-body">
-                  {CATEGORIES.map((cat) => (
-                    <SelectItem key={cat} value={cat} className="rounded-xl">
-                      {cat}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+          {/* Category — free text input */}
+          <div className="space-y-1.5">
+            <Label htmlFor="category" className="font-body font-medium text-sm">
+              Category *
+            </Label>
+            <Input
+              id="category"
+              data-ocid="sticker_form.category_input"
+              value={form.category}
+              onChange={(e) => update("category", e.target.value)}
+              placeholder="e.g. Funny, Expressive, Animated…"
+              required
+              className="rounded-xl font-body"
+            />
           </div>
 
           {/* Image Upload Section */}
@@ -386,17 +442,6 @@ export default function StickerFormModal({
               </button>
             )}
 
-            {/* Upload progress bar (standalone, when uploading without preview overlay) */}
-            {isUploading && !hasImage && (
-              <div className="space-y-1.5">
-                <div className="flex justify-between text-xs font-body text-muted-foreground">
-                  <span>Uploading image…</span>
-                  <span>{uploadProgress}%</span>
-                </div>
-                <Progress value={uploadProgress} className="h-2 rounded-full" />
-              </div>
-            )}
-
             {/* Upload error */}
             {uploadError && (
               <p
@@ -418,7 +463,6 @@ export default function StickerFormModal({
                 value={imageFile ? "" : form.imageUrl}
                 onChange={(e) => {
                   if (imageFile) {
-                    // If file was selected, clear it when user types URL
                     setImageFile(null);
                     setPreviewUrl(e.target.value || null);
                   } else {
@@ -433,40 +477,109 @@ export default function StickerFormModal({
             </div>
           </div>
 
-          {/* Amazon Link */}
-          <div className="space-y-1.5">
-            <Label
-              htmlFor="amazonLink"
-              className="font-body font-medium text-sm"
-            >
-              Amazon Link
+          {/* ── Video Upload Section ── */}
+          <div className="space-y-2">
+            <Label className="font-body font-medium text-sm flex items-center gap-2">
+              <Video className="w-4 h-4 text-primary" />
+              Video{" "}
+              <span className="text-muted-foreground font-normal">
+                (optional) — like a WhatsApp sticker
+              </span>
             </Label>
-            <Input
-              id="amazonLink"
-              data-ocid="sticker_form.amazon_link_input"
-              value={form.amazonLink}
-              onChange={(e) => update("amazonLink", e.target.value)}
-              placeholder="https://amazon.com/..."
-              className="rounded-xl font-body"
-            />
-          </div>
 
-          {/* Pinterest Link */}
-          <div className="space-y-1.5">
-            <Label
-              htmlFor="pinterestLink"
-              className="font-body font-medium text-sm"
-            >
-              Pinterest Link
-            </Label>
-            <Input
-              id="pinterestLink"
-              data-ocid="sticker_form.pinterest_link_input"
-              value={form.pinterestLink}
-              onChange={(e) => update("pinterestLink", e.target.value)}
-              placeholder="https://pinterest.com/pin/..."
-              className="rounded-xl font-body"
+            {/* Hidden video input */}
+            <input
+              ref={videoInputRef}
+              type="file"
+              accept="video/*"
+              className="hidden"
+              onChange={handleVideoInputChange}
+              aria-label="Upload sticker video"
             />
+
+            {/* Video preview */}
+            {hasVideo ? (
+              <div className="space-y-2">
+                <div className="relative rounded-2xl overflow-hidden border-2 border-border bg-muted/40">
+                  <video
+                    src={videoPreviewUrl ?? form.videoUrl}
+                    className="w-full max-h-48 object-contain"
+                    muted
+                    loop
+                    autoPlay
+                    playsInline
+                    controls
+                  />
+                  {isUploadingVideo && (
+                    <div className="absolute inset-0 bg-background/80 flex flex-col items-center justify-center gap-3 rounded-2xl">
+                      <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                      <span className="text-sm font-body font-medium text-foreground">
+                        Processing video… {videoUploadProgress}%
+                      </span>
+                      <Progress
+                        value={videoUploadProgress}
+                        className="w-3/4 h-2 rounded-full"
+                      />
+                    </div>
+                  )}
+                </div>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={clearVideo}
+                  className="rounded-xl font-body gap-1.5 text-xs text-destructive border-destructive/30 hover:bg-destructive/10"
+                >
+                  <X className="w-3.5 h-3.5" />
+                  Remove Video
+                </Button>
+              </div>
+            ) : (
+              /* Video dropzone */
+              <button
+                type="button"
+                data-ocid="sticker_form.dropzone"
+                aria-label="Upload sticker video — click to browse"
+                onClick={() => videoInputRef.current?.click()}
+                className="w-full cursor-pointer rounded-2xl border-2 border-dashed border-border bg-muted/20 hover:border-primary/50 hover:bg-primary/3 transition-all duration-200 flex flex-col items-center justify-center gap-3 py-6 px-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <div className="rounded-full bg-accent/30 p-3">
+                  <Video className="w-6 h-6 text-accent-foreground" />
+                </div>
+                <div className="text-center space-y-1">
+                  <p className="font-body font-medium text-sm text-foreground">
+                    Click to upload video
+                  </p>
+                  <p className="font-body text-xs text-muted-foreground">
+                    MP4, WEBM, MOV — up to 50 MB
+                  </p>
+                </div>
+              </button>
+            )}
+
+            {/* Fallback video URL input */}
+            <div className="space-y-1.5">
+              <p className="text-xs font-body text-muted-foreground text-center">
+                — or paste a video URL —
+              </p>
+              <Input
+                id="videoUrl"
+                data-ocid="sticker_form.input"
+                value={videoFile ? "" : form.videoUrl}
+                onChange={(e) => {
+                  if (videoFile) {
+                    setVideoFile(null);
+                    setVideoPreviewUrl(e.target.value || null);
+                  } else {
+                    setVideoPreviewUrl(e.target.value || null);
+                  }
+                  update("videoUrl", e.target.value);
+                }}
+                placeholder="https://example.com/sticker.mp4"
+                disabled={!!videoFile}
+                className="rounded-xl font-body text-sm"
+              />
+            </div>
           </div>
 
           {/* Featured checkbox */}
@@ -504,16 +617,17 @@ export default function StickerFormModal({
                 isPending ||
                 !form.title ||
                 !form.description ||
-                !form.price ||
                 !form.category ||
                 (!form.imageUrl && !imageFile)
               }
               className="rounded-xl font-body flex-1 sm:flex-none bg-primary text-primary-foreground gap-2"
             >
-              {isUploading ? (
+              {isUploading || isUploadingVideo ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  Uploading… {uploadProgress}%
+                  {isUploadingVideo
+                    ? `Processing video… ${videoUploadProgress}%`
+                    : `Uploading… ${uploadProgress}%`}
                 </>
               ) : addMutation.isPending || updateMutation.isPending ? (
                 <>

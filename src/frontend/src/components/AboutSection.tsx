@@ -58,23 +58,23 @@ export default function AboutSection() {
           >
             <div className="inline-flex items-center gap-2 bg-white/60 backdrop-blur-sm rounded-full px-4 py-1.5 text-sm font-body font-medium text-primary mb-4">
               <Heart className="w-3.5 h-3.5" />
-              Our Story
+              My Story
             </div>
             <h2 className="font-display text-4xl sm:text-5xl font-semibold text-foreground mb-6">
               Stickers Born from{" "}
               <span className="italic text-primary">Pure Joy</span>
             </h2>
             <p className="font-body text-lg text-foreground/70 leading-relaxed max-w-2xl mx-auto">
-              We create handcrafted stickers full of love and personality — from
+              I create handcrafted stickers full of love and personality — from
               dreamy florals to charming critters and uplifting phrases. Each
               design starts as a spark of inspiration and becomes a tiny piece
-              of art that travels with you wherever you go.
+              of art that I'm proud to share with the world.
               <br />
               <br />
-              Our stickers are perfect for decorating journals, water bottles,
-              laptops, planners, and everything in between. We believe the
-              little things make life more beautiful, and we're here to add a
-              little sparkle to yours. ✨
+              My stickers are perfect for decorating journals, water bottles,
+              laptops, planners, and everything in between. This is my creative
+              showcase — a little corner of the internet where I share the
+              designs I pour my heart into. ✨
             </p>
           </motion.div>
 

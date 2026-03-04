@@ -1,10 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "motion/react";
-import { useState } from "react";
-import { useStickersByCategory } from "../hooks/useQueries";
+import { useAllStickers } from "../hooks/useQueries";
 import StickerCard from "./StickerCard";
-
-const CATEGORIES = ["All", "Cute Animals", "Floral", "Fun Phrases", "Seasonal"];
 
 const containerVariants = {
   hidden: {},
@@ -34,8 +31,7 @@ const itemVariants = {
 };
 
 export default function CatalogSection() {
-  const [activeCategory, setActiveCategory] = useState("All");
-  const { data: stickers, isLoading } = useStickersByCategory(activeCategory);
+  const { data: stickers, isLoading } = useAllStickers();
 
   return (
     <section id="catalog" className="py-24 bg-background">
@@ -49,10 +45,10 @@ export default function CatalogSection() {
           className="text-center mb-12"
         >
           <p className="font-body text-xs font-bold uppercase tracking-widest text-primary/70 mb-4">
-            The Shop
+            Showcase
           </p>
           <h2 className="font-display text-4xl sm:text-5xl font-semibold text-foreground leading-[1.1] mb-4">
-            Browse the Collection
+            My Sticker Collection
           </h2>
           {/* Editorial rule */}
           <div className="flex items-center justify-center gap-3 mb-4">
@@ -61,33 +57,8 @@ export default function CatalogSection() {
             <div className="h-px w-12 bg-primary/30" />
           </div>
           <p className="font-body text-muted-foreground text-base max-w-sm mx-auto leading-relaxed">
-            Find your perfect match — there's something for everyone 🌈
+            Original handmade designs — funny, expressive, made with love 😂🎨
           </p>
-        </motion.div>
-
-        {/* Category tabs */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.15 }}
-          className="flex flex-wrap justify-center gap-2 mb-12"
-        >
-          {CATEGORIES.map((cat) => (
-            <button
-              type="button"
-              key={cat}
-              data-ocid="catalog.tab"
-              onClick={() => setActiveCategory(cat)}
-              className={`px-5 py-2 rounded-full font-body font-semibold text-sm transition-all duration-200 ${
-                activeCategory === cat
-                  ? "bg-primary text-primary-foreground shadow-cozy scale-[1.06] ring-2 ring-primary/20 ring-offset-1"
-                  : "bg-card border border-border/80 text-foreground/65 hover:bg-secondary hover:text-foreground hover:border-border hover:scale-[1.03]"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
         </motion.div>
 
         {/* Loading state */}
@@ -102,10 +73,6 @@ export default function CatalogSection() {
                   <Skeleton className="w-full aspect-square rounded-3xl" />
                   <Skeleton className="h-4 w-3/4 rounded-full" />
                   <Skeleton className="h-3 w-1/2 rounded-full" />
-                  <div className="flex gap-2">
-                    <Skeleton className="h-9 flex-1 rounded-xl" />
-                    <Skeleton className="h-9 flex-1 rounded-xl" />
-                  </div>
                 </div>
               ),
             )}
@@ -124,11 +91,10 @@ export default function CatalogSection() {
               🎨
             </div>
             <h3 className="font-display text-2xl font-semibold text-foreground mb-2">
-              No stickers found
+              No stickers yet
             </h3>
             <p className="font-body text-muted-foreground max-w-sm">
-              We're adding new designs all the time! Check back soon or browse
-              another category.
+              New designs are being crafted! Check back soon.
             </p>
           </motion.div>
         )}
@@ -137,7 +103,6 @@ export default function CatalogSection() {
         {!isLoading && stickers && stickers.length > 0 && (
           <motion.div
             data-ocid="catalog.list"
-            key={activeCategory}
             variants={containerVariants}
             initial="hidden"
             animate="visible"

@@ -40,24 +40,6 @@ export function useStickersByCategory(category: string) {
   });
 }
 
-export function useIsAdmin() {
-  const { actor, isFetching } = useActor();
-  return useQuery<boolean>({
-    queryKey: ["isAdmin"],
-    queryFn: async () => {
-      if (!actor) return false;
-      try {
-        return await actor.isCallerAdmin();
-      } catch {
-        // Backend traps for unregistered users — treat as not admin
-        return false;
-      }
-    },
-    enabled: !!actor && !isFetching,
-    retry: false,
-  });
-}
-
 export function useSeedStickers() {
   const { actor } = useActor();
   const queryClient = useQueryClient();

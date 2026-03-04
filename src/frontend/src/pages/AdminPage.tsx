@@ -27,7 +27,8 @@ import {
   ArrowLeft,
   KeyRound,
   Loader2,
-  LogOut,
+  Lock,
+  LockOpen,
   Pencil,
   Plus,
   Sprout,
@@ -40,28 +41,36 @@ import { useState } from "react";
 import { toast } from "sonner";
 import type { Sticker } from "../backend.d";
 import StickerFormModal from "../components/StickerFormModal";
-import { useInternetIdentity } from "../hooks/useInternetIdentity";
-import { useLogin } from "../hooks/useLogin";
 import {
   useAllStickers,
   useDeleteSticker,
-  useIsAdmin,
   useSeedStickers,
   useToggleFeatured,
 } from "../hooks/useQueries";
-import { getSessionParameter, storeSessionParameter } from "../utils/urlParams";
+import { getVideoUrl } from "../utils/stickerHelpers";
+
+const PIN_KEY = "stickerAdminPin";
+const STORAGE_KEY = "stickerAdminUnlocked";
+
+function getStoredPin(): string {
+  return localStorage.getItem(PIN_KEY) ?? "1234";
+}
+
+function isUnlocked(): boolean {
+  return localStorage.getItem(STORAGE_KEY) === "true";
+}
 
 export default function AdminPage() {
-  const { login, loginStatus, identity } = useLogin();
-  const { clear: logout } = useInternetIdentity();
+  const [unlocked, setUnlocked] = useState(isUnlocked);
+  const [pin, setPin] = useState("");
+  const [pinError, setPinError] = useState("");
 
-  // Identity is available both after a fresh login (loginStatus === "success")
-  // and after returning from the Internet Identity redirect (loginStatus === "idle"
-  // but identity is restored from localStorage). Both cases count as logged in.
-  const isLoggedIn = !!identity && !identity.getPrincipal().isAnonymous();
-  const isInitializing = loginStatus === "initializing";
+  // Change PIN state
+  const [currentPin, setCurrentPin] = useState("");
+  const [newPin, setNewPin] = useState("");
+  const [confirmPin, setConfirmPin] = useState("");
+  const [pinChangeError, setPinChangeError] = useState("");
 
-  const { data: isAdmin, isLoading: isLoadingAdmin } = useIsAdmin();
   const { data: stickers, isLoading: isLoadingStickers } = useAllStickers();
   const seedMutation = useSeedStickers();
   const deleteMutation = useDeleteSticker();
@@ -70,11 +79,24 @@ export default function AdminPage() {
   const [addOpen, setAddOpen] = useState(false);
   const [editSticker, setEditSticker] = useState<Sticker | null>(null);
 
-  // Pre-login admin token entry state
-  const [adminTokenInput, setAdminTokenInput] = useState(
-    getSessionParameter("caffeineAdminToken") ?? "",
-  );
-  const [tokenError, setTokenError] = useState("");
+  const handleUnlock = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (pin === getStoredPin()) {
+      localStorage.setItem(STORAGE_KEY, "true");
+      setUnlocked(true);
+      setPinError("");
+      setPin("");
+    } else {
+      setPinError("Incorrect PIN. Try again.");
+      setPin("");
+    }
+  };
+
+  const handleLock = () => {
+    localStorage.removeItem(STORAGE_KEY);
+    setUnlocked(false);
+    setPin("");
+  };
 
   const handleSeed = async () => {
     try {
@@ -103,123 +125,108 @@ export default function AdminPage() {
     }
   };
 
-  /**
-   * Step 1 (not logged in): user enters their admin token, we save it to
-   * sessionStorage, then trigger the login redirect.  When Internet Identity
-   * returns, useActor picks up the token from sessionStorage and registers the
-   * principal as admin on first contact with the backend.
-   */
-  const handleTokenAndLogin = (e: React.FormEvent) => {
+  const handleChangePin = (e: React.FormEvent) => {
     e.preventDefault();
-    const token = adminTokenInput.trim();
-    if (!token) {
-      setTokenError("Please enter your admin token.");
+    setPinChangeError("");
+
+    if (currentPin !== getStoredPin()) {
+      setPinChangeError("Current PIN is incorrect.");
       return;
     }
-    storeSessionParameter("caffeineAdminToken", token);
-    login();
+    if (newPin.length < 4 || newPin.length > 8) {
+      setPinChangeError("New PIN must be 4–8 digits.");
+      return;
+    }
+    if (newPin !== confirmPin) {
+      setPinChangeError("New PIN and confirmation do not match.");
+      return;
+    }
+
+    localStorage.setItem(PIN_KEY, newPin);
+    toast.success("PIN updated successfully 🔐");
+    setCurrentPin("");
+    setNewPin("");
+    setConfirmPin("");
+    setPinChangeError("");
   };
 
-  // Still resolving the stored identity — show a spinner
-  if (isInitializing) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
-  }
+  const videoCount = stickers?.filter((s) => getVideoUrl(s) !== "").length ?? 0;
 
-  // ── STATE A: not logged in ──────────────────────────────────────────────
-  // Collect the admin token FIRST, then redirect to Internet Identity.
-  // This ensures useActor receives the real token and registers the principal
-  // as admin on first call — before any empty-string registration can happen.
-  if (!isLoggedIn) {
-    const hasSavedToken = !!getSessionParameter("caffeineAdminToken");
-
+  // ── PIN entry screen ─────────────────────────────────────────────────────
+  if (!unlocked) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="cozy-card p-10 text-center max-w-md w-full"
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className="cozy-card p-10 text-center max-w-sm w-full"
         >
-          <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-            <KeyRound className="w-7 h-7 text-primary" />
+          {/* Icon */}
+          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-5">
+            <Lock className="w-8 h-8 text-primary" />
           </div>
+
           <h1 className="font-display text-2xl font-semibold text-foreground mb-2">
-            Admin Sign In
+            Admin Access
           </h1>
-          <p className="font-body text-muted-foreground mb-6">
-            {hasSavedToken
-              ? "Token saved. Click below to sign in."
-              : "Enter your admin token, then sign in to continue."}
+          <p className="font-body text-sm text-muted-foreground mb-8">
+            Enter your PIN to manage your sticker collection.
           </p>
 
-          <form onSubmit={handleTokenAndLogin} className="space-y-4 text-left">
-            <div className="space-y-1.5">
+          <form onSubmit={handleUnlock} className="space-y-4">
+            <div className="space-y-1.5 text-left">
               <Label
-                htmlFor="admin-token"
+                htmlFor="admin-pin"
                 className="font-body text-sm text-foreground/70"
               >
-                Admin Token
+                Admin PIN
               </Label>
               <Input
-                id="admin-token"
+                id="admin-pin"
                 data-ocid="admin.input"
                 type="password"
-                placeholder="Paste your CAFFEINE_ADMIN_TOKEN…"
-                value={adminTokenInput}
+                inputMode="numeric"
+                maxLength={8}
+                placeholder="••••"
+                value={pin}
                 onChange={(e) => {
-                  setAdminTokenInput(e.target.value);
-                  setTokenError("");
+                  setPin(e.target.value.replace(/\D/g, "").slice(0, 8));
+                  setPinError("");
                 }}
-                className="rounded-xl font-body border-border focus-visible:ring-primary"
+                className="rounded-xl font-body text-center text-lg tracking-[0.5em] border-border focus-visible:ring-primary"
+                autoFocus
                 autoComplete="off"
-                disabled={loginStatus === "logging-in"}
               />
-              <p className="font-body text-xs text-muted-foreground">
-                Find this in your Caffeine project settings as{" "}
-                <code className="bg-muted px-1 py-0.5 rounded text-foreground/80">
-                  CAFFEINE_ADMIN_TOKEN
-                </code>
-                .
-              </p>
             </div>
 
-            {tokenError && (
+            {pinError && (
               <p
                 data-ocid="admin.error_state"
                 className="font-body text-sm text-destructive text-center"
               >
-                {tokenError}
+                {pinError}
               </p>
             )}
 
             <Button
               data-ocid="admin.submit_button"
               type="submit"
-              disabled={loginStatus === "logging-in"}
-              className="rounded-2xl font-body gap-2 bg-primary text-primary-foreground w-full"
+              disabled={pin.length < 4}
+              className="rounded-2xl font-body gap-2 bg-primary text-primary-foreground w-full h-11"
             >
-              {loginStatus === "logging-in" ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" /> Signing in…
-                </>
-              ) : (
-                <>
-                  <KeyRound className="w-4 h-4" /> Save Token & Sign In
-                </>
-              )}
+              <LockOpen className="w-4 h-4" />
+              Unlock Admin Panel
             </Button>
           </form>
 
-          <div className="mt-5">
+          <div className="mt-6">
             <Link
               to="/"
               data-ocid="admin.link"
               className="font-body text-sm text-muted-foreground hover:text-primary transition-colors flex items-center justify-center gap-1"
             >
-              <ArrowLeft className="w-3.5 h-3.5" /> Back to shop
+              <ArrowLeft className="w-3.5 h-3.5" /> Back to collection
             </Link>
           </div>
         </motion.div>
@@ -227,65 +234,7 @@ export default function AdminPage() {
     );
   }
 
-  // ── Loading admin check ─────────────────────────────────────────────────
-  if (isLoadingAdmin) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
-  }
-
-  // ── STATE D: logged in but NOT admin ───────────────────────────────────
-  // This happens when the user previously signed in without a token and got
-  // registered as a plain user.  They must sign out and sign in again using
-  // the token form above.
-  if (!isAdmin) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-4">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="cozy-card p-10 text-center max-w-md w-full"
-        >
-          <div className="text-5xl mb-4">🔒</div>
-          <h1 className="font-display text-2xl font-semibold text-foreground mb-2">
-            Admin Access Required
-          </h1>
-          <p className="font-body text-muted-foreground mb-2">
-            Your account doesn&apos;t have admin privileges.
-          </p>
-          <p className="font-body text-sm text-muted-foreground mb-6">
-            This can happen if you signed in before entering the admin token.
-            Please sign out and sign in again — make sure to enter your{" "}
-            <code className="bg-muted px-1 py-0.5 rounded text-foreground/80">
-              CAFFEINE_ADMIN_TOKEN
-            </code>{" "}
-            first.
-          </p>
-
-          <Button
-            data-ocid="admin.primary_button"
-            onClick={logout}
-            className="rounded-2xl font-body gap-2 bg-primary text-primary-foreground w-full"
-          >
-            <LogOut className="w-4 h-4" /> Sign Out &amp; Try Again
-          </Button>
-
-          <div className="mt-5">
-            <Link
-              to="/"
-              data-ocid="admin.link"
-              className="font-body text-sm text-muted-foreground hover:text-primary transition-colors flex items-center justify-center gap-1"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" /> Back to shop
-            </Link>
-          </div>
-        </motion.div>
-      </div>
-    );
-  }
-
+  // ── Admin dashboard ───────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -299,7 +248,7 @@ export default function AdminPage() {
                 className="rounded-xl gap-2 font-body"
               >
                 <ArrowLeft className="w-4 h-4" />
-                Shop
+                Collection
               </Button>
             </Link>
             <div className="w-px h-5 bg-border" />
@@ -332,16 +281,26 @@ export default function AdminPage() {
               <Plus className="w-3.5 h-3.5" />
               Add Sticker
             </Button>
+            <Button
+              data-ocid="admin.secondary_button"
+              variant="ghost"
+              size="sm"
+              onClick={handleLock}
+              className="rounded-xl font-body gap-2 text-muted-foreground hover:text-foreground"
+            >
+              <Lock className="w-3.5 h-3.5" />
+              Lock
+            </Button>
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 py-8">
+      <div className="container mx-auto px-4 sm:px-6 py-8 space-y-8">
         {/* Stats */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8"
+          className="grid grid-cols-2 sm:grid-cols-3 gap-4"
         >
           {[
             {
@@ -355,14 +314,9 @@ export default function AdminPage() {
               emoji: "⭐",
             },
             {
-              label: "Categories",
-              value: new Set(stickers?.map((s) => s.category)).size ?? 0,
-              emoji: "📂",
-            },
-            {
-              label: "With Amazon",
-              value: stickers?.filter((s) => s.amazonLink).length ?? 0,
-              emoji: "🛒",
+              label: "With Videos",
+              value: videoCount,
+              emoji: "🎬",
             },
           ].map((stat) => (
             <div key={stat.label} className="cozy-card p-4 text-center">
@@ -375,6 +329,136 @@ export default function AdminPage() {
               </div>
             </div>
           ))}
+        </motion.div>
+
+        {/* ── Change PIN card ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          className="cozy-card overflow-hidden"
+        >
+          <div className="px-6 py-4 border-b border-border flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
+              <KeyRound className="w-4 h-4 text-primary" />
+            </div>
+            <div>
+              <h2 className="font-heading font-semibold text-foreground">
+                Change PIN
+              </h2>
+              <p className="font-body text-xs text-muted-foreground">
+                Update your admin PIN anytime — like Instagram or Facebook
+                password
+              </p>
+            </div>
+          </div>
+
+          <div className="p-6">
+            <form onSubmit={handleChangePin} className="space-y-4 max-w-sm">
+              <div className="space-y-1.5">
+                <Label
+                  htmlFor="current-pin"
+                  className="font-body text-sm font-medium"
+                >
+                  Current PIN
+                </Label>
+                <Input
+                  id="current-pin"
+                  data-ocid="admin.input"
+                  type="password"
+                  inputMode="numeric"
+                  maxLength={8}
+                  placeholder="Enter current PIN"
+                  value={currentPin}
+                  onChange={(e) => {
+                    setCurrentPin(
+                      e.target.value.replace(/\D/g, "").slice(0, 8),
+                    );
+                    setPinChangeError("");
+                  }}
+                  className="rounded-xl font-body"
+                  autoComplete="current-password"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label
+                  htmlFor="new-pin"
+                  className="font-body text-sm font-medium"
+                >
+                  New PIN{" "}
+                  <span className="text-muted-foreground font-normal">
+                    (4–8 digits)
+                  </span>
+                </Label>
+                <Input
+                  id="new-pin"
+                  data-ocid="admin.input"
+                  type="password"
+                  inputMode="numeric"
+                  minLength={4}
+                  maxLength={8}
+                  placeholder="Enter new PIN"
+                  value={newPin}
+                  onChange={(e) => {
+                    setNewPin(e.target.value.replace(/\D/g, "").slice(0, 8));
+                    setPinChangeError("");
+                  }}
+                  className="rounded-xl font-body"
+                  autoComplete="new-password"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label
+                  htmlFor="confirm-pin"
+                  className="font-body text-sm font-medium"
+                >
+                  Confirm New PIN
+                </Label>
+                <Input
+                  id="confirm-pin"
+                  data-ocid="admin.input"
+                  type="password"
+                  inputMode="numeric"
+                  maxLength={8}
+                  placeholder="Repeat new PIN"
+                  value={confirmPin}
+                  onChange={(e) => {
+                    setConfirmPin(
+                      e.target.value.replace(/\D/g, "").slice(0, 8),
+                    );
+                    setPinChangeError("");
+                  }}
+                  className="rounded-xl font-body"
+                  autoComplete="new-password"
+                />
+              </div>
+
+              {pinChangeError && (
+                <p
+                  data-ocid="admin.error_state"
+                  className="font-body text-sm text-destructive"
+                >
+                  {pinChangeError}
+                </p>
+              )}
+
+              <Button
+                type="submit"
+                data-ocid="admin.save_button"
+                disabled={
+                  currentPin.length < 4 ||
+                  newPin.length < 4 ||
+                  confirmPin.length < 4
+                }
+                className="rounded-xl font-body gap-2 bg-primary text-primary-foreground"
+              >
+                <KeyRound className="w-4 h-4" />
+                Save New PIN
+              </Button>
+            </form>
+          </div>
         </motion.div>
 
         {/* Table */}
@@ -411,7 +495,7 @@ export default function AdminPage() {
                       Category
                     </TableHead>
                     <TableHead className="font-heading text-foreground/70 hidden md:table-cell">
-                      Price
+                      Video
                     </TableHead>
                     <TableHead className="font-heading text-foreground/70 hidden lg:table-cell">
                       Featured
@@ -446,8 +530,16 @@ export default function AdminPage() {
                           {sticker.category}
                         </Badge>
                       </TableCell>
-                      <TableCell className="font-body font-semibold text-primary hidden md:table-cell">
-                        {sticker.price}
+                      <TableCell className="hidden md:table-cell">
+                        {getVideoUrl(sticker) ? (
+                          <span className="font-body text-xs text-accent-foreground bg-accent/40 px-2 py-0.5 rounded-full">
+                            🎬 Yes
+                          </span>
+                        ) : (
+                          <span className="font-body text-xs text-muted-foreground">
+                            —
+                          </span>
+                        )}
                       </TableCell>
                       <TableCell className="hidden lg:table-cell">
                         <button
@@ -497,7 +589,8 @@ export default function AdminPage() {
                                 </AlertDialogTitle>
                                 <AlertDialogDescription>
                                   This will permanently remove "{sticker.title}"
-                                  from your shop. This action cannot be undone.
+                                  from your collection. This action cannot be
+                                  undone.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
@@ -508,7 +601,7 @@ export default function AdminPage() {
                                   Cancel
                                 </AlertDialogCancel>
                                 <AlertDialogAction
-                                  data-ocid="admin.submit_button"
+                                  data-ocid="admin.confirm_button"
                                   onClick={() => handleDelete(sticker.id)}
                                   className="rounded-xl font-body bg-destructive text-destructive-foreground hover:bg-destructive/90"
                                 >
@@ -525,7 +618,7 @@ export default function AdminPage() {
               </Table>
 
               {(!stickers || stickers.length === 0) && (
-                <div className="p-12 text-center">
+                <div data-ocid="admin.empty_state" className="p-12 text-center">
                   <div className="text-4xl mb-3">🎨</div>
                   <p className="font-display text-lg font-semibold text-foreground mb-1">
                     No stickers yet

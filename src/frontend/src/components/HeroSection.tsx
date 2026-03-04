@@ -34,7 +34,7 @@ export default function HeroSection() {
         className="absolute top-28 right-[12%] hidden lg:block z-10"
       >
         <div className="w-16 h-16 bg-white/90 backdrop-blur-sm rounded-[1.25rem] shadow-cozy-hover flex items-center justify-center text-2xl">
-          🌸
+          😂
         </div>
       </motion.div>
       <motion.div
@@ -48,7 +48,7 @@ export default function HeroSection() {
         className="absolute bottom-36 right-[6%] hidden lg:block z-10"
       >
         <div className="w-14 h-14 bg-white/90 backdrop-blur-sm rounded-[1.1rem] shadow-cozy-hover flex items-center justify-center text-xl">
-          🐰
+          🎨
         </div>
       </motion.div>
       <motion.div
@@ -62,7 +62,7 @@ export default function HeroSection() {
         className="absolute top-44 right-[28%] hidden xl:block z-10"
       >
         <div className="w-12 h-12 bg-white/90 backdrop-blur-sm rounded-[1rem] shadow-cozy flex items-center justify-center text-lg">
-          ⭐
+          ✨
         </div>
       </motion.div>
 
@@ -82,7 +82,7 @@ export default function HeroSection() {
             className="inline-flex items-center gap-2 bg-white/75 backdrop-blur-md rounded-full px-4 py-1.5 text-sm font-body font-semibold text-primary mb-7 shadow-cozy border border-white/60"
           >
             <Sparkles className="w-3.5 h-3.5" />
-            Handcrafted with love ✨
+            Original handmade designs ✨
           </motion.div>
 
           {/* Headline */}
@@ -96,9 +96,9 @@ export default function HeroSection() {
             }}
             className="font-display text-5xl sm:text-6xl lg:text-[4.25rem] font-semibold leading-[1.07] tracking-tight mb-6 text-foreground"
           >
-            Stick with <span className="text-gradient italic">What You</span>
+            Handmade <span className="text-gradient italic">Stickers</span>
             <br />
-            Love{" "}
+            with Love{" "}
             <span className="not-italic inline-block origin-center hover:animate-float">
               💕
             </span>
@@ -115,9 +115,9 @@ export default function HeroSection() {
             }}
             className="font-body text-lg text-foreground/72 mb-10 max-w-[26rem] leading-[1.7]"
           >
-            Adorable, high-quality stickers for journals, laptops, water
-            bottles, and everywhere your heart desires. Shop on Amazon &amp;
-            Pinterest.
+            I create original sticker designs — funny, expressive, and full of
+            personality. Each one is made with passion and shared with the
+            world.
           </motion.p>
 
           {/* CTA row */}
@@ -138,7 +138,7 @@ export default function HeroSection() {
               className="rounded-2xl font-body font-semibold text-base px-9 h-14 bg-primary text-primary-foreground shadow-cozy hover:shadow-cozy-hover hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 gap-2.5"
             >
               <Heart className="w-4 h-4 fill-current opacity-80" />
-              Shop Now
+              See My Collection
             </Button>
             <Button
               variant="outline"
@@ -163,9 +163,9 @@ export default function HeroSection() {
             className="flex flex-wrap gap-2.5"
           >
             {[
-              { icon: "🎨", value: "50+", label: "Unique Designs" },
-              { icon: "⭐", value: "5-Star", label: "Rated" },
-              { icon: "🚚", value: "Prime", label: "Eligible" },
+              { icon: "🎨", value: "Original", label: "Artwork" },
+              { icon: "✋", value: "100%", label: "Handmade" },
+              { icon: "💕", value: "Made", label: "with Love" },
             ].map((stat) => (
               <div
                 key={stat.label}
@@ -197,7 +197,7 @@ export default function HeroSection() {
         >
           <path
             d="M0 72L48 64C96 56 192 40 288 36C384 32 480 40 576 44C672 48 768 48 864 42C960 36 1056 22 1152 16C1248 10 1344 12 1392 13L1440 14V72H0Z"
-            fill="oklch(0.97 0.012 60)"
+            fill="oklch(0.98 0.008 90)"
           />
         </svg>
       </div>

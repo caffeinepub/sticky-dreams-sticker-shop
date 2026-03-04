@@ -1,17 +1,11 @@
-import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
-import { LogIn, LogOut, Menu, Sparkles, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
-import { useLogin } from "../hooks/useLogin";
 
 export default function Navbar() {
-  const { login, clear, loginStatus, identity } = useLogin();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  const isLoggedIn = !!identity && !identity.getPrincipal().isAnonymous();
-  const isLoggingIn = loginStatus === "logging-in";
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -53,7 +47,7 @@ export default function Navbar() {
             onClick={() => scrollToSection("catalog")}
             className="px-4 py-2 rounded-xl text-sm font-body font-medium text-foreground/80 hover:text-primary hover:bg-primary/8 transition-colors"
           >
-            Shop
+            Collection
           </button>
           <button
             type="button"
@@ -73,37 +67,11 @@ export default function Navbar() {
           </button>
           <Link
             to="/admin"
+            data-ocid="nav.admin_link"
             className="px-4 py-2 rounded-xl text-sm font-body font-medium text-foreground/60 hover:text-primary hover:bg-primary/8 transition-colors"
           >
             Admin
           </Link>
-        </div>
-
-        {/* Auth Button */}
-        <div className="hidden md:flex items-center gap-3">
-          {isLoggedIn ? (
-            <Button
-              data-ocid="nav.login_button"
-              variant="outline"
-              size="sm"
-              onClick={clear}
-              className="rounded-xl border-border gap-2 font-body"
-            >
-              <LogOut className="w-3.5 h-3.5" />
-              Sign Out
-            </Button>
-          ) : (
-            <Button
-              data-ocid="nav.login_button"
-              size="sm"
-              onClick={login}
-              disabled={isLoggingIn}
-              className="rounded-xl gap-2 font-body bg-primary text-primary-foreground hover:opacity-90"
-            >
-              <LogIn className="w-3.5 h-3.5" />
-              {isLoggingIn ? "Signing in..." : "Sign In"}
-            </Button>
-          )}
         </div>
 
         {/* Mobile hamburger */}
@@ -136,7 +104,7 @@ export default function Navbar() {
               onClick={() => scrollToSection("catalog")}
               className="text-left px-4 py-3 rounded-xl font-body font-medium text-foreground/80 hover:text-primary hover:bg-primary/8 transition-colors"
             >
-              Shop
+              Collection
             </button>
             <button
               type="button"
@@ -154,35 +122,14 @@ export default function Navbar() {
             >
               About
             </button>
-            <div className="pt-2 border-t border-border/40">
-              {isLoggedIn ? (
-                <Button
-                  data-ocid="nav.login_button"
-                  variant="outline"
-                  className="w-full rounded-xl gap-2 font-body"
-                  onClick={() => {
-                    clear();
-                    setMobileOpen(false);
-                  }}
-                >
-                  <LogOut className="w-4 h-4" />
-                  Sign Out
-                </Button>
-              ) : (
-                <Button
-                  data-ocid="nav.login_button"
-                  className="w-full rounded-xl gap-2 font-body bg-primary text-primary-foreground"
-                  onClick={() => {
-                    login();
-                    setMobileOpen(false);
-                  }}
-                  disabled={isLoggingIn}
-                >
-                  <LogIn className="w-4 h-4" />
-                  {isLoggingIn ? "Signing in..." : "Sign In"}
-                </Button>
-              )}
-            </div>
+            <Link
+              to="/admin"
+              data-ocid="nav.admin_link"
+              onClick={() => setMobileOpen(false)}
+              className="text-left px-4 py-3 rounded-xl font-body font-medium text-foreground/60 hover:text-primary hover:bg-primary/8 transition-colors"
+            >
+              Admin
+            </Link>
           </div>
         </motion.div>
       )}
