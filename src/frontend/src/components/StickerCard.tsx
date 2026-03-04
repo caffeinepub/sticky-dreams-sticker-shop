@@ -73,11 +73,11 @@ export default function StickerCard({ sticker, featured }: StickerCardProps) {
             </h3>
           </div>
 
-          {/* Handmade label */}
+          {/* Bottom label */}
           <div className="flex items-center gap-1.5 mt-auto pt-1">
             <Heart className="w-3.5 h-3.5 text-primary fill-primary/40" />
             <span className="font-body text-xs text-muted-foreground">
-              Handmade with love
+              Original design
             </span>
             {videoUrl && (
               <span className="ml-auto font-body text-xs text-accent-foreground bg-accent/40 px-2 py-0.5 rounded-full">
@@ -92,58 +92,59 @@ export default function StickerCard({ sticker, featured }: StickerCardProps) {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent
           data-ocid="product.dialog"
-          className="max-w-md rounded-3xl font-body overflow-hidden p-0 gap-0"
+          className="max-w-lg rounded-3xl font-body overflow-hidden p-0 gap-0"
         >
-          {/* Image or Video */}
-          <div className="relative aspect-[16/9] bg-secondary overflow-hidden">
-            {videoUrl ? (
+          {/* Image or Video — full display */}
+          {videoUrl ? (
+            <div className="bg-black rounded-t-3xl overflow-hidden">
+              {/* biome-ignore lint/a11y/useMediaCaption: sticker videos are short visual clips with no dialogue */}
               <video
                 src={videoUrl}
-                className="w-full h-full object-cover"
-                muted
+                className="w-full max-h-[60vh] object-contain"
                 loop
                 autoPlay
                 playsInline
                 controls
               />
-            ) : (
-              <>
-                <img
-                  src={sticker.imageUrl}
-                  alt={sticker.title}
-                  className="w-full h-full object-cover"
-                />
-                {/* Gradient scrim over image bottom */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-              </>
-            )}
-            {featured && (
-              <div className="absolute top-4 left-4">
-                <span className="bg-primary text-primary-foreground text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-xs">
-                  <Star className="w-3.5 h-3.5 fill-current" />
-                  Featured
-                </span>
-              </div>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div
+              className="bg-secondary rounded-t-3xl overflow-hidden flex items-center justify-center p-2"
+              style={{ minHeight: "260px" }}
+            >
+              <img
+                src={sticker.imageUrl}
+                alt={sticker.title}
+                className="w-full max-h-[55vh] object-contain rounded-2xl"
+              />
+            </div>
+          )}
 
           {/* Content */}
           <div className="p-6 pt-5">
             <DialogHeader className="text-left space-y-2.5 mb-4">
-              <DialogTitle className="font-display text-2xl font-semibold text-foreground leading-tight">
-                {sticker.title}
-              </DialogTitle>
+              <div className="flex items-start justify-between gap-3">
+                <DialogTitle className="font-display text-2xl font-semibold text-foreground leading-tight">
+                  {sticker.title}
+                </DialogTitle>
+                {featured && (
+                  <span className="shrink-0 bg-primary text-primary-foreground text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-xs mt-0.5">
+                    <Star className="w-3 h-3 fill-current" />
+                    Featured
+                  </span>
+                )}
+              </div>
               <DialogDescription className="text-foreground/65 leading-[1.65] text-sm">
                 {sticker.description}
               </DialogDescription>
             </DialogHeader>
 
-            {/* Handmade with love note */}
+            {/* Design note */}
             <div className="flex items-center gap-2 bg-primary/8 rounded-2xl px-4 py-3 border border-primary/15">
               <Heart className="w-4 h-4 text-primary fill-primary/50 shrink-0" />
               <p className="font-body text-sm text-foreground/75">
-                This is an original handmade sticker design, crafted with love
-                and care.
+                An original Revnya design — expressive, fun, and full of
+                personality.
               </p>
             </div>
           </div>

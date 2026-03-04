@@ -12,6 +12,14 @@
 }
 
 @font-face {
+  font-family: "Instrument Serif";
+  src: url("/assets/fonts/InstrumentSerif.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
   font-family: "Figtree";
   src: url("/assets/fonts/Figtree.woff2") format("woff2");
   font-weight: 300 900;
@@ -31,63 +39,63 @@
   :root {
     --radius: 1rem;
 
-    /* ── Light Funny Eye-Comfort Palette: Cream + Sunny Yellow + Mint ─── */
-    --background: 0.98 0.008 90;
-    --foreground: 0.18 0.04 55;
+    /* ── Reunya Blush-Pink Botanical Palette ─── */
+    --background: 0.97 0.015 15;
+    --foreground: 0.18 0.02 30;
 
-    --card: 0.995 0.005 80;
-    --card-foreground: 0.18 0.04 55;
+    --card: 0.99 0.008 20;
+    --card-foreground: 0.18 0.02 30;
 
-    --popover: 0.998 0.003 80;
-    --popover-foreground: 0.18 0.04 55;
+    --popover: 0.995 0.005 20;
+    --popover-foreground: 0.18 0.02 30;
 
-    /* Primary: warm sunny yellow-orange */
-    --primary: 0.72 0.18 65;
-    --primary-foreground: 0.12 0.04 50;
+    /* Primary: dusty rose / mauve pink */
+    --primary: 0.62 0.1 10;
+    --primary-foreground: 0.99 0.005 20;
 
-    /* Secondary: soft lemon */
-    --secondary: 0.95 0.06 90;
-    --secondary-foreground: 0.22 0.06 55;
+    /* Secondary: warm parchment */
+    --secondary: 0.94 0.02 25;
+    --secondary-foreground: 0.22 0.03 30;
 
-    /* Muted: warm neutral */
-    --muted: 0.95 0.012 80;
-    --muted-foreground: 0.5 0.03 60;
+    /* Muted: pale blush */
+    --muted: 0.95 0.012 15;
+    --muted-foreground: 0.5 0.025 20;
 
-    /* Accent: mint green */
-    --accent: 0.88 0.08 160;
-    --accent-foreground: 0.2 0.08 150;
+    /* Accent: sage botanical green */
+    --accent: 0.88 0.055 145;
+    --accent-foreground: 0.2 0.06 140;
 
     /* Destructive */
     --destructive: 0.57 0.22 25;
     --destructive-foreground: 0.99 0 0;
 
-    --border: 0.9 0.02 80;
-    --input: 0.92 0.015 85;
-    --ring: 0.72 0.18 65;
+    --border: 0.88 0.02 15;
+    --input: 0.92 0.015 20;
+    --ring: 0.62 0.1 10;
 
     /* Charts */
-    --chart-1: 0.72 0.18 65;
-    --chart-2: 0.68 0.14 155;
-    --chart-3: 0.65 0.12 200;
-    --chart-4: 0.75 0.14 85;
-    --chart-5: 0.62 0.16 30;
+    --chart-1: 0.62 0.1 10;
+    --chart-2: 0.68 0.08 145;
+    --chart-3: 0.65 0.06 60;
+    --chart-4: 0.75 0.08 30;
+    --chart-5: 0.58 0.12 350;
 
     /* Sidebar */
-    --sidebar: 0.98 0.008 90;
-    --sidebar-foreground: 0.18 0.04 55;
-    --sidebar-primary: 0.72 0.18 65;
-    --sidebar-primary-foreground: 0.12 0.04 50;
-    --sidebar-accent: 0.88 0.08 160;
-    --sidebar-accent-foreground: 0.2 0.08 150;
-    --sidebar-border: 0.9 0.02 80;
-    --sidebar-ring: 0.72 0.18 65;
+    --sidebar: 0.97 0.015 15;
+    --sidebar-foreground: 0.18 0.02 30;
+    --sidebar-primary: 0.62 0.1 10;
+    --sidebar-primary-foreground: 0.99 0.005 20;
+    --sidebar-accent: 0.88 0.055 145;
+    --sidebar-accent-foreground: 0.2 0.06 140;
+    --sidebar-border: 0.88 0.02 15;
+    --sidebar-ring: 0.62 0.1 10;
 
     /* Custom extras */
-    --sunny: 0.88 0.18 80;
-    --mint: 0.88 0.08 160;
-    --lemon: 0.95 0.06 90;
-    --cream: 0.98 0.008 90;
-    --tangerine: 0.75 0.2 50;
+    --blush: 0.92 0.03 15;
+    --rose: 0.62 0.1 10;
+    --sage: 0.78 0.07 145;
+    --parchment: 0.97 0.015 15;
+    --ink: 0.18 0.02 30;
   }
 
   * {
@@ -120,32 +128,32 @@
   .gradient-hero {
     background: linear-gradient(
       105deg,
-      oklch(0.98 0.04 85 / 0.96) 0%,
-      oklch(0.97 0.06 80 / 0.92) 30%,
-      oklch(0.93 0.05 155 / 0.4) 60%,
-      oklch(0.9 0.04 160 / 0.05) 100%
+      oklch(0.97 0.025 15 / 0.97) 0%,
+      oklch(0.96 0.03 15 / 0.92) 30%,
+      oklch(0.93 0.04 145 / 0.3) 60%,
+      oklch(0.9 0.03 145 / 0.05) 100%
     );
   }
 
   .gradient-section {
     background: linear-gradient(
       160deg,
-      oklch(0.98 0.008 90) 0%,
-      oklch(0.96 0.04 85) 40%,
-      oklch(0.94 0.05 155) 100%
+      oklch(0.97 0.015 15) 0%,
+      oklch(0.96 0.025 20) 40%,
+      oklch(0.94 0.04 145) 100%
     );
   }
 
   .gradient-featured {
     background: linear-gradient(
       135deg,
-      oklch(0.95 0.07 85) 0%,
-      oklch(0.91 0.08 155) 100%
+      oklch(0.95 0.04 15) 0%,
+      oklch(0.91 0.05 145) 100%
     );
   }
 
   .text-gradient {
-    background: linear-gradient(135deg, oklch(0.58 0.2 65), oklch(0.5 0.15 155));
+    background: linear-gradient(135deg, oklch(0.52 0.12 10), oklch(0.5 0.08 145));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -167,7 +175,7 @@
 
   .sticker-pop:hover {
     transform: scale(1.04) rotate(-1deg);
-    box-shadow: 0 12px 40px oklch(0.72 0.18 65 / 0.25);
+    box-shadow: 0 12px 40px oklch(0.62 0.1 10 / 0.2);
   }
 }
 
@@ -178,14 +186,14 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: oklch(0.96 0.01 85);
+  background: oklch(0.96 0.01 15);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: oklch(0.82 0.12 75);
+  background: oklch(0.82 0.07 15);
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.72 0.18 65);
+  background: oklch(0.62 0.1 10);
 }

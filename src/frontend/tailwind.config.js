@@ -66,14 +66,15 @@ export default {
           border: "oklch(var(--sidebar-border))",
           ring: "oklch(var(--sidebar-ring))",
         },
-        peach: "oklch(var(--peach))",
-        lavender: "oklch(var(--lavender))",
-        mint: "oklch(var(--mint))",
         blush: "oklch(var(--blush))",
-        cream: "oklch(var(--cream))",
+        rose: "oklch(var(--rose))",
+        sage: "oklch(var(--sage))",
+        parchment: "oklch(var(--parchment))",
+        ink: "oklch(var(--ink))",
       },
       fontFamily: {
         display: ["Fraunces", "Georgia", "serif"],
+        serif: ["Instrument Serif", "Georgia", "serif"],
         body: ["Figtree", "system-ui", "sans-serif"],
         heading: ["Bricolage Grotesque", "system-ui", "sans-serif"],
       },
@@ -86,11 +87,11 @@ export default {
       },
       boxShadow: {
         xs: "0 1px 2px 0 rgba(0,0,0,0.05)",
-        cozy: "0 4px 24px oklch(0.62 0.18 10 / 0.1), 0 1px 4px oklch(0.62 0.18 10 / 0.06)",
+        cozy: "0 4px 24px oklch(0.62 0.1 10 / 0.1), 0 1px 4px oklch(0.62 0.1 10 / 0.06)",
         "cozy-hover":
-          "0 12px 40px oklch(0.62 0.18 10 / 0.18), 0 4px 12px oklch(0.62 0.18 10 / 0.1)",
-        "lavender-glow":
-          "0 8px 32px oklch(0.78 0.1 310 / 0.25), 0 2px 8px oklch(0.78 0.1 310 / 0.15)",
+          "0 12px 40px oklch(0.62 0.1 10 / 0.18), 0 4px 12px oklch(0.62 0.1 10 / 0.1)",
+        "botanical-glow":
+          "0 8px 32px oklch(0.78 0.07 145 / 0.25), 0 2px 8px oklch(0.78 0.07 145 / 0.15)",
       },
       keyframes: {
         "accordion-down": {

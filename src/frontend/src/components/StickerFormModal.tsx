@@ -113,16 +113,16 @@ export default function StickerFormModal({
   }, [videoFile]);
 
   const handleFileSelect = (file: File) => {
+    resetUpload();
     if (!file.type.startsWith("image/")) {
       toast.error("Please select an image file (PNG, JPG, GIF, WEBP, etc.)");
       return;
     }
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error("Image must be smaller than 10 MB");
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be smaller than 5 MB. Try compressing it first.");
       return;
     }
     setImageFile(file);
-    resetUpload();
   };
 
   const handleVideoFileSelect = (file: File) => {
@@ -209,7 +209,14 @@ export default function StickerFormModal({
 
       // Upload new image if one was selected
       if (imageFile) {
-        finalImageUrl = await uploadFile(imageFile);
+        try {
+          finalImageUrl = await uploadFile(imageFile);
+        } catch {
+          toast.error(
+            "Image upload failed. Please try a smaller image or use the URL field instead.",
+          );
+          return;
+        }
       }
 
       // Upload new video if one was selected
@@ -248,11 +255,7 @@ export default function StickerFormModal({
       }
       onClose();
     } catch {
-      if (uploadError) {
-        toast.error(`Image upload failed: ${uploadError}`);
-      } else {
-        toast.error("Something went wrong. Please try again.");
-      }
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
@@ -429,7 +432,7 @@ export default function StickerFormModal({
                       : "Click to upload image"}
                   </p>
                   <p className="font-body text-xs text-muted-foreground">
-                    PNG, JPG, GIF, WEBP — up to 10 MB
+                    PNG, JPG, GIF, WEBP — up to 5 MB
                   </p>
                 </div>
                 <span

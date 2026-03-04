@@ -1,38 +1,38 @@
-import { Heart, Leaf, Package, Sparkles } from "lucide-react";
+import { Feather, Heart, Leaf, Palette, Send, Sparkles } from "lucide-react";
 import { motion } from "motion/react";
 
 const values = [
   {
-    icon: Heart,
-    title: "Made with Love",
+    icon: Palette,
+    title: "Born from Art",
     description:
-      "Every design is crafted with care, passion, and a whole lot of heart.",
-    color: "text-[oklch(0.62_0.18_10)]",
+      "Each design starts as a sketch, refined into something you'll want to stick everywhere.",
+    color: "text-[oklch(0.52_0.1_10)]",
     bg: "bg-[oklch(0.94_0.04_15)]",
   },
   {
-    icon: Sparkles,
-    title: "Unique Designs",
-    description:
-      "Original artwork you won't find anywhere else. Stand out from the crowd!",
-    color: "text-[oklch(0.6_0.14_310)]",
-    bg: "bg-[oklch(0.93_0.04_310)]",
-  },
-  {
-    icon: Package,
-    title: "Premium Quality",
-    description:
-      "Waterproof, UV-resistant, and long-lasting. Built for real life adventures.",
-    color: "text-[oklch(0.55_0.12_55)]",
-    bg: "bg-[oklch(0.94_0.05_60)]",
-  },
-  {
     icon: Leaf,
-    title: "Eco-Friendly",
+    title: "Inspired by Nature",
     description:
-      "Printed on sustainable materials with eco-conscious inks. Love the planet too!",
-    color: "text-[oklch(0.5_0.13_155)]",
-    bg: "bg-[oklch(0.93_0.04_155)]",
+      "Botanicals, florals, and the quiet beauty of the natural world inform every collection.",
+    color: "text-[oklch(0.48_0.09_145)]",
+    bg: "bg-[oklch(0.92_0.04_145)]",
+  },
+  {
+    icon: Feather,
+    title: "Crafted with Intention",
+    description:
+      "Details matter. Every curve, color, and composition is considered before it becomes a sticker.",
+    color: "text-[oklch(0.5_0.08_60)]",
+    bg: "bg-[oklch(0.94_0.04_60)]",
+  },
+  {
+    icon: Send,
+    title: "Made to Be Shared",
+    description:
+      "Stickers are made to travel. Put them on your journal, your laptop, or give one to a friend.",
+    color: "text-[oklch(0.52_0.12_350)]",
+    bg: "bg-[oklch(0.94_0.04_350)]",
   },
 ];
 
@@ -42,9 +42,9 @@ export default function AboutSection() {
       id="about"
       className="py-24 gradient-section relative overflow-hidden"
     >
-      {/* Decorative */}
-      <div className="absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl opacity-30 bg-[oklch(0.9_0.06_310)]" />
-      <div className="absolute bottom-0 left-0 w-80 h-80 rounded-full blur-3xl opacity-25 bg-[oklch(0.92_0.06_30)]" />
+      {/* Decorative botanical orbs */}
+      <div className="absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl opacity-25 bg-[oklch(0.88_0.055_145)]" />
+      <div className="absolute bottom-0 left-0 w-80 h-80 rounded-full blur-3xl opacity-20 bg-[oklch(0.9_0.04_15)]" />
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <div className="max-w-5xl mx-auto">
@@ -57,24 +57,24 @@ export default function AboutSection() {
             className="text-center mb-16"
           >
             <div className="inline-flex items-center gap-2 bg-white/60 backdrop-blur-sm rounded-full px-4 py-1.5 text-sm font-body font-medium text-primary mb-4">
-              <Heart className="w-3.5 h-3.5" />
+              <Sparkles className="w-3.5 h-3.5" />
               My Story
             </div>
             <h2 className="font-display text-4xl sm:text-5xl font-semibold text-foreground mb-6">
-              Stickers Born from{" "}
-              <span className="italic text-primary">Pure Joy</span>
+              Designs Rooted in{" "}
+              <span className="italic text-primary">Beauty</span>
             </h2>
             <p className="font-body text-lg text-foreground/70 leading-relaxed max-w-2xl mx-auto">
-              I create handcrafted stickers full of love and personality — from
-              dreamy florals to charming critters and uplifting phrases. Each
-              design starts as a spark of inspiration and becomes a tiny piece
-              of art that I'm proud to share with the world.
+              I create stickers full of personality — from dreamy botanicals to
+              bold expressions and uplifting phrases. Each design starts as a
+              spark of inspiration and becomes a tiny piece of art I'm proud to
+              share with the world.
               <br />
               <br />
               My stickers are perfect for decorating journals, water bottles,
               laptops, planners, and everything in between. This is my creative
               showcase — a little corner of the internet where I share the
-              designs I pour my heart into. ✨
+              designs I pour my heart into.
             </p>
           </motion.div>
 

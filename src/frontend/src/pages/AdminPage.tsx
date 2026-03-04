@@ -25,19 +25,22 @@ import {
 import { Link } from "@tanstack/react-router";
 import {
   ArrowLeft,
+  ExternalLink,
   KeyRound,
   Loader2,
   Lock,
   LockOpen,
   Pencil,
   Plus,
+  Share2,
   Sprout,
   Star,
   StarOff,
   Trash2,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { SiInstagram, SiPinterest } from "react-icons/si";
 import { toast } from "sonner";
 import type { Sticker } from "../backend.d";
 import StickerFormModal from "../components/StickerFormModal";
@@ -51,6 +54,10 @@ import { getVideoUrl } from "../utils/stickerHelpers";
 
 const PIN_KEY = "stickerAdminPin";
 const STORAGE_KEY = "stickerAdminUnlocked";
+const SITE_LINK_KEY = "stickerOnlineSiteLink";
+const SITE_LINK_LABEL_KEY = "stickerOnlineSiteLinkLabel";
+const PINTEREST_LINK_KEY = "stickerPinterestLink";
+const INSTAGRAM_LINK_KEY = "stickerInstagramLink";
 
 function getStoredPin(): string {
   return localStorage.getItem(PIN_KEY) ?? "1234";
@@ -70,6 +77,22 @@ export default function AdminPage() {
   const [newPin, setNewPin] = useState("");
   const [confirmPin, setConfirmPin] = useState("");
   const [pinChangeError, setPinChangeError] = useState("");
+
+  // Online site link state
+  const [siteLink, setSiteLink] = useState(
+    () => localStorage.getItem(SITE_LINK_KEY) ?? "",
+  );
+  const [siteLinkLabel, setSiteLinkLabel] = useState(
+    () => localStorage.getItem(SITE_LINK_LABEL_KEY) ?? "Visit My Shop",
+  );
+
+  // Social media links state
+  const [pinterestLink, setPinterestLink] = useState(
+    () => localStorage.getItem(PINTEREST_LINK_KEY) ?? "",
+  );
+  const [instagramLink, setInstagramLink] = useState(
+    () => localStorage.getItem(INSTAGRAM_LINK_KEY) ?? "",
+  );
 
   const { data: stickers, isLoading: isLoadingStickers } = useAllStickers();
   const seedMutation = useSeedStickers();
@@ -97,6 +120,29 @@ export default function AdminPage() {
     setUnlocked(false);
     setPin("");
   };
+
+  // Auto-lock only when the tab is hidden (user navigates away or minimizes),
+  // NOT on window blur — blur fires when a file picker opens, which would
+  // kick the admin out before they can finish uploading an image.
+  useEffect(() => {
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        localStorage.removeItem(STORAGE_KEY);
+        setUnlocked(false);
+      }
+    };
+    const onBeforeUnload = () => {
+      localStorage.removeItem(STORAGE_KEY);
+    };
+
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    window.addEventListener("beforeunload", onBeforeUnload);
+
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      window.removeEventListener("beforeunload", onBeforeUnload);
+    };
+  }, []);
 
   const handleSeed = async () => {
     try {
@@ -150,6 +196,25 @@ export default function AdminPage() {
     setPinChangeError("");
   };
 
+  const handleSaveSiteLink = (e: React.FormEvent) => {
+    e.preventDefault();
+    localStorage.setItem(SITE_LINK_KEY, siteLink.trim());
+    localStorage.setItem(
+      SITE_LINK_LABEL_KEY,
+      siteLinkLabel.trim() || "Visit My Shop",
+    );
+    toast.success("Site link saved! It will appear in the footer 🔗");
+  };
+
+  const handleSaveSocialLinks = (e: React.FormEvent) => {
+    e.preventDefault();
+    localStorage.setItem(PINTEREST_LINK_KEY, pinterestLink.trim());
+    localStorage.setItem(INSTAGRAM_LINK_KEY, instagramLink.trim());
+    toast.success(
+      "Social links saved! They are now clickable in the footer 🌐",
+    );
+  };
+
   const videoCount = stickers?.filter((s) => getVideoUrl(s) !== "").length ?? 0;
 
   // ── PIN entry screen ─────────────────────────────────────────────────────
@@ -170,8 +235,15 @@ export default function AdminPage() {
           <h1 className="font-display text-2xl font-semibold text-foreground mb-2">
             Admin Access
           </h1>
-          <p className="font-body text-sm text-muted-foreground mb-8">
+          <p className="font-body text-sm text-muted-foreground mb-2">
             Enter your PIN to manage your sticker collection.
+          </p>
+          <p className="font-body text-xs text-muted-foreground/70 mb-8 bg-muted/50 rounded-xl px-4 py-2.5 border border-border/50">
+            🔒 Access this page by navigating to{" "}
+            <span className="font-mono font-semibold text-foreground/60">
+              /admin
+            </span>{" "}
+            in your browser. Not publicly linked.
           </p>
 
           <form onSubmit={handleUnlock} className="space-y-4">
@@ -347,8 +419,7 @@ export default function AdminPage() {
                 Change PIN
               </h2>
               <p className="font-body text-xs text-muted-foreground">
-                Update your admin PIN anytime — like Instagram or Facebook
-                password
+                Like Instagram — your password, your control, anytime you want
               </p>
             </div>
           </div>
@@ -456,6 +527,162 @@ export default function AdminPage() {
               >
                 <KeyRound className="w-4 h-4" />
                 Save New PIN
+              </Button>
+            </form>
+          </div>
+        </motion.div>
+
+        {/* ── Online Site Link card ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.08 }}
+          className="cozy-card overflow-hidden"
+        >
+          <div className="px-6 py-4 border-b border-border flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
+              <ExternalLink className="w-4 h-4 text-primary" />
+            </div>
+            <div>
+              <h2 className="font-heading font-semibold text-foreground">
+                My Online Site Link
+              </h2>
+              <p className="font-body text-xs text-muted-foreground">
+                Add a link to your shop, Pinterest, or any site — it will show
+                in the footer
+              </p>
+            </div>
+          </div>
+
+          <div className="p-6">
+            <form onSubmit={handleSaveSiteLink} className="space-y-4 max-w-sm">
+              <div className="space-y-1.5">
+                <Label
+                  htmlFor="site-link"
+                  className="font-body text-sm font-medium"
+                >
+                  URL
+                </Label>
+                <Input
+                  id="site-link"
+                  data-ocid="admin.site_link_input"
+                  type="url"
+                  placeholder="https://www.myshop.com"
+                  value={siteLink}
+                  onChange={(e) => setSiteLink(e.target.value)}
+                  className="rounded-xl font-body"
+                  autoComplete="off"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label
+                  htmlFor="site-link-label"
+                  className="font-body text-sm font-medium"
+                >
+                  Button Label{" "}
+                  <span className="text-muted-foreground font-normal">
+                    (shown in footer)
+                  </span>
+                </Label>
+                <Input
+                  id="site-link-label"
+                  data-ocid="admin.site_link_label_input"
+                  type="text"
+                  placeholder="Visit My Shop"
+                  value={siteLinkLabel}
+                  onChange={(e) => setSiteLinkLabel(e.target.value)}
+                  className="rounded-xl font-body"
+                  autoComplete="off"
+                />
+              </div>
+
+              <Button
+                type="submit"
+                data-ocid="admin.site_link_save_button"
+                className="rounded-xl font-body gap-2 bg-primary text-primary-foreground"
+              >
+                <ExternalLink className="w-4 h-4" />
+                Save Link
+              </Button>
+            </form>
+          </div>
+        </motion.div>
+
+        {/* ── Social Media Links card ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="cozy-card overflow-hidden"
+        >
+          <div className="px-6 py-4 border-b border-border flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
+              <Share2 className="w-4 h-4 text-primary" />
+            </div>
+            <div>
+              <h2 className="font-heading font-semibold text-foreground">
+                Social Media Links
+              </h2>
+              <p className="font-body text-xs text-muted-foreground">
+                Add your Pinterest and Instagram — they become clickable icons
+                in the footer
+              </p>
+            </div>
+          </div>
+
+          <div className="p-6">
+            <form
+              onSubmit={handleSaveSocialLinks}
+              className="space-y-4 max-w-sm"
+            >
+              <div className="space-y-1.5">
+                <Label
+                  htmlFor="pinterest-link"
+                  className="font-body text-sm font-medium flex items-center gap-2"
+                >
+                  <SiPinterest className="w-4 h-4 text-[oklch(0.55_0.18_10)]" />
+                  Pinterest URL
+                </Label>
+                <Input
+                  id="pinterest-link"
+                  data-ocid="admin.pinterest_input"
+                  type="url"
+                  placeholder="https://pinterest.com/yourprofile"
+                  value={pinterestLink}
+                  onChange={(e) => setPinterestLink(e.target.value)}
+                  className="rounded-xl font-body"
+                  autoComplete="off"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label
+                  htmlFor="instagram-link"
+                  className="font-body text-sm font-medium flex items-center gap-2"
+                >
+                  <SiInstagram className="w-4 h-4 text-[oklch(0.6_0.15_330)]" />
+                  Instagram URL
+                </Label>
+                <Input
+                  id="instagram-link"
+                  data-ocid="admin.instagram_input"
+                  type="url"
+                  placeholder="https://instagram.com/yourprofile"
+                  value={instagramLink}
+                  onChange={(e) => setInstagramLink(e.target.value)}
+                  className="rounded-xl font-body"
+                  autoComplete="off"
+                />
+              </div>
+
+              <Button
+                type="submit"
+                data-ocid="admin.social_links_save_button"
+                className="rounded-xl font-body gap-2 bg-primary text-primary-foreground"
+              >
+                <Share2 className="w-4 h-4" />
+                Save Social Links
               </Button>
             </form>
           </div>

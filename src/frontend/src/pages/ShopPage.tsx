@@ -1,4 +1,5 @@
 import AboutSection from "../components/AboutSection";
+import BrandValuesSection from "../components/BrandValuesSection";
 import CatalogSection from "../components/CatalogSection";
 import FeaturedSection from "../components/FeaturedSection";
 import Footer from "../components/Footer";
@@ -14,6 +15,7 @@ export default function ShopPage() {
         <FeaturedSection />
         <CatalogSection />
         <AboutSection />
+        <BrandValuesSection />
       </main>
       <Footer />
     </div>

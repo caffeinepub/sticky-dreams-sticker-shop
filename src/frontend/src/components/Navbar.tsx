@@ -33,9 +33,9 @@ export default function Navbar() {
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 shrink-0">
           <img
-            src="/assets/generated/sticker-shop-logo-transparent.dim_300x120.png"
-            alt="Sticky Dreams"
-            className="h-10 w-auto"
+            src="/assets/uploads/WhatsApp-Image-2026-03-03-at-22.04.42-1.jpeg"
+            alt="Revnya"
+            className="h-12 w-auto rounded-xl"
           />
         </Link>
 
@@ -65,13 +65,6 @@ export default function Navbar() {
           >
             About
           </button>
-          <Link
-            to="/admin"
-            data-ocid="nav.admin_link"
-            className="px-4 py-2 rounded-xl text-sm font-body font-medium text-foreground/60 hover:text-primary hover:bg-primary/8 transition-colors"
-          >
-            Admin
-          </Link>
         </div>
 
         {/* Mobile hamburger */}
@@ -122,14 +115,6 @@ export default function Navbar() {
             >
               About
             </button>
-            <Link
-              to="/admin"
-              data-ocid="nav.admin_link"
-              onClick={() => setMobileOpen(false)}
-              className="text-left px-4 py-3 rounded-xl font-body font-medium text-foreground/60 hover:text-primary hover:bg-primary/8 transition-colors"
-            >
-              Admin
-            </Link>
           </div>
         </motion.div>
       )}

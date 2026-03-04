@@ -37,9 +37,9 @@ export default function FeaturedSection() {
       id="featured"
       className="py-20 gradient-featured relative overflow-hidden"
     >
-      {/* Decorative blobs */}
-      <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full blur-3xl opacity-40 bg-[oklch(0.9_0.06_310)]" />
-      <div className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full blur-3xl opacity-30 bg-[oklch(0.92_0.06_30)]" />
+      {/* Decorative botanical blobs */}
+      <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full blur-3xl opacity-35 bg-[oklch(0.88_0.055_145)]" />
+      <div className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full blur-3xl opacity-25 bg-[oklch(0.92_0.04_15)]" />
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         {/* Section header */}
@@ -52,10 +52,10 @@ export default function FeaturedSection() {
         >
           <div className="inline-flex items-center gap-2 bg-white/60 backdrop-blur-sm rounded-full px-4 py-1.5 text-xs font-body font-bold uppercase tracking-widest text-primary mb-5 border border-white/60">
             <Sparkles className="w-3 h-3" />
-            Staff Picks
+            Curated Picks
           </div>
           <h2 className="font-display text-4xl sm:text-5xl font-semibold text-foreground leading-[1.1] mb-4">
-            Featured Favorites
+            Featured Designs
           </h2>
           {/* Editorial rule */}
           <div className="flex items-center justify-center gap-3 mb-4">
@@ -64,7 +64,7 @@ export default function FeaturedSection() {
             <div className="h-px w-12 bg-primary/30" />
           </div>
           <p className="font-body text-muted-foreground text-base max-w-sm mx-auto leading-relaxed">
-            Our most-loved designs, chosen with extra care 💕
+            A selection of our most loved stickers from the collection.
           </p>
         </motion.div>
 

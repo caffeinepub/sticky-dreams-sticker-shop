@@ -45,10 +45,10 @@ export default function CatalogSection() {
           className="text-center mb-12"
         >
           <p className="font-body text-xs font-bold uppercase tracking-widest text-primary/70 mb-4">
-            Showcase
+            Revnya
           </p>
           <h2 className="font-display text-4xl sm:text-5xl font-semibold text-foreground leading-[1.1] mb-4">
-            My Sticker Collection
+            The Collection
           </h2>
           {/* Editorial rule */}
           <div className="flex items-center justify-center gap-3 mb-4">
@@ -57,7 +57,7 @@ export default function CatalogSection() {
             <div className="h-px w-12 bg-primary/30" />
           </div>
           <p className="font-body text-muted-foreground text-base max-w-sm mx-auto leading-relaxed">
-            Original handmade designs — funny, expressive, made with love 😂🎨
+            Browse all designs — add your own from the admin panel.
           </p>
         </motion.div>
 
@@ -87,14 +87,48 @@ export default function CatalogSection() {
             animate={{ opacity: 1, scale: 1 }}
             className="flex flex-col items-center justify-center py-24 text-center"
           >
-            <div className="w-20 h-20 bg-muted rounded-3xl flex items-center justify-center mb-4 text-4xl">
-              🎨
+            <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mb-4">
+              <svg
+                viewBox="0 0 48 48"
+                className="w-10 h-10"
+                fill="none"
+                aria-hidden="true"
+              >
+                <ellipse
+                  cx="24"
+                  cy="24"
+                  rx="12"
+                  ry="18"
+                  fill="oklch(0.85 0.07 145)"
+                  opacity="0.6"
+                  transform="rotate(-15, 24, 24)"
+                />
+                <ellipse
+                  cx="24"
+                  cy="24"
+                  rx="10"
+                  ry="15"
+                  fill="oklch(0.65 0.1 140)"
+                  opacity="0.4"
+                  transform="rotate(15, 24, 24)"
+                />
+                <line
+                  x1="24"
+                  y1="6"
+                  x2="24"
+                  y2="42"
+                  stroke="oklch(0.55 0.1 140)"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                />
+              </svg>
             </div>
             <h3 className="font-display text-2xl font-semibold text-foreground mb-2">
-              No stickers yet
+              The collection blooms soon
             </h3>
             <p className="font-body text-muted-foreground max-w-sm">
-              New designs are being crafted! Check back soon.
+              New designs are taking shape. Visit the admin panel to add your
+              stickers.
             </p>
           </motion.div>
         )}
