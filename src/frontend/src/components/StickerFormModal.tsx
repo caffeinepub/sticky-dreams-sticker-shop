@@ -13,7 +13,19 @@ import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
 import { ImagePlus, Loader2, Upload, Video, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+
+const FOLDERS_KEY = "sticknestFolders";
+function getStoredFolders(): string[] {
+  try {
+    const raw = localStorage.getItem(FOLDERS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
 import { toast } from "sonner";
 import type { Sticker } from "../backend.d";
 import { useAddSticker, useUpdateSticker } from "../hooks/useQueries";
@@ -61,6 +73,17 @@ export default function StickerFormModal({
   const [videoUploadProgress, setVideoUploadProgress] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
+
+  const [folders, setFolders] = useState<string[]>(getStoredFolders);
+
+  // Refresh folders when dialog opens
+  const refreshFolders = useCallback(() => {
+    setFolders(getStoredFolders());
+  }, []);
+
+  useEffect(() => {
+    if (open) refreshFolders();
+  }, [open, refreshFolders]);
 
   const addMutation = useAddSticker();
   const updateMutation = useUpdateSticker();
@@ -320,7 +343,7 @@ export default function StickerFormModal({
             />
           </div>
 
-          {/* Category — free text input */}
+          {/* Category — free text input + folder chips */}
           <div className="space-y-1.5">
             <Label htmlFor="category" className="font-body font-medium text-sm">
               Category *
@@ -334,6 +357,31 @@ export default function StickerFormModal({
               required
               className="rounded-xl font-body"
             />
+            {folders.length > 0 && (
+              <div className="pt-1">
+                <p className="font-body text-xs text-muted-foreground mb-1.5">
+                  Quick pick from your folders:
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {folders.map((folder) => (
+                    <button
+                      key={folder}
+                      type="button"
+                      onClick={() => update("category", folder)}
+                      className={[
+                        "font-body text-xs rounded-full px-3 py-1 border transition-all duration-150",
+                        form.category.toLowerCase().trim() ===
+                        folder.toLowerCase().trim()
+                          ? "bg-primary text-primary-foreground border-primary font-semibold"
+                          : "bg-secondary text-foreground border-border hover:border-primary/60 hover:bg-primary/10",
+                      ].join(" ")}
+                    >
+                      {folder}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Image Upload Section */}

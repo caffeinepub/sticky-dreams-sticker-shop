@@ -40,13 +40,13 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <img
-              src="/assets/uploads/WhatsApp-Image-2026-03-03-at-22.04.42-1.jpeg"
-              alt="Revnya"
-              className="h-14 w-auto mb-3 opacity-90 rounded-xl"
+              src="/assets/generated/sticknest-logo-fun-transparent.dim_400x200.png"
+              alt="Sticknest"
+              className="h-14 w-auto mb-3 opacity-90"
             />
             <p className="font-body text-sm text-[oklch(0.72_0.015_25)] leading-relaxed max-w-xs mt-2">
-              Botanical stickers for the artful soul. Peel, place, and let your
-              spaces bloom with beauty.
+              A cozy nest for stickers you'll love. Peel them, stick them, and
+              spread some joy.
             </p>
           </div>
 
@@ -144,7 +144,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="pt-6 border-t border-[oklch(0.3_0.02_20)] flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
           <p className="font-body text-xs text-[oklch(0.58_0.015_25)]">
-            © {year} Revnya. All rights reserved.
+            © {year} Sticknest. All rights reserved.
           </p>
           <p className="font-body text-xs text-[oklch(0.58_0.015_25)]">
             Built with{" "}

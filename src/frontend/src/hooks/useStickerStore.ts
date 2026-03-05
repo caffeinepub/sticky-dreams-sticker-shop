@@ -1,6 +1,6 @@
 import type { Sticker } from "../backend.d";
 
-const STORAGE_KEY = "revnya_stickers";
+const STORAGE_KEY = "sticknest_stickers";
 
 // Seed data with placeholder images
 const SEED_STICKERS: Sticker[] = [

@@ -143,7 +143,7 @@ export default function StickerCard({ sticker, featured }: StickerCardProps) {
             <div className="flex items-center gap-2 bg-primary/8 rounded-2xl px-4 py-3 border border-primary/15">
               <Heart className="w-4 h-4 text-primary fill-primary/50 shrink-0" />
               <p className="font-body text-sm text-foreground/75">
-                An original Revnya design — expressive, fun, and full of
+                An original Sticknest design — expressive, fun, and full of
                 personality.
               </p>
             </div>

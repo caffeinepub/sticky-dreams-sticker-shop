@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Leaf, Sparkles, Star } from "lucide-react";
+import { Home, Sparkles, Star } from "lucide-react";
 import { motion } from "motion/react";
 
 export default function HeroSection() {
@@ -12,8 +12,8 @@ export default function HeroSection() {
       {/* Full-bleed background photo */}
       <div className="absolute inset-0">
         <img
-          src="/assets/generated/hero-banner-reunya.dim_1200x500.jpg"
-          alt="Revnya botanical sticker collection"
+          src="/assets/generated/sticknest-hero-fun.dim_1200x500.jpg"
+          alt="Sticknest fun sticker collection"
           className="w-full h-full object-cover object-center"
           loading="eager"
         />
@@ -23,7 +23,7 @@ export default function HeroSection() {
         <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-background/60 to-transparent" />
       </div>
 
-      {/* Floating botanical decorative elements */}
+      {/* Floating fun sticker decorative elements */}
       <motion.div
         animate={{ y: [-10, 10, -10], rotate: [12, 16, 12] }}
         transition={{
@@ -33,33 +33,10 @@ export default function HeroSection() {
         }}
         className="absolute top-28 right-[12%] hidden lg:block z-10"
       >
-        <div className="w-16 h-16 bg-rose-50/80 backdrop-blur-sm rounded-full shadow-cozy-hover flex items-center justify-center border border-rose-200/60">
-          <svg
-            viewBox="0 0 40 40"
-            className="w-8 h-8"
-            fill="none"
-            aria-hidden="true"
-          >
-            <path
-              d="M20 8 C20 8 28 14 28 22 C28 28 24 34 20 34 C16 34 12 28 12 22 C12 14 20 8 20 8Z"
-              fill="oklch(0.85 0.07 15)"
-              opacity="0.7"
-            />
-            <path
-              d="M20 12 C20 12 14 18 14 24 C14 28 17 32 20 34 C23 32 26 28 26 24 C26 18 20 12 20 12Z"
-              fill="oklch(0.72 0.08 10)"
-              opacity="0.5"
-            />
-            <line
-              x1="20"
-              y1="8"
-              x2="20"
-              y2="36"
-              stroke="oklch(0.6 0.06 145)"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            />
-          </svg>
+        <div className="w-16 h-16 bg-white/80 backdrop-blur-sm rounded-full shadow-cozy-hover flex items-center justify-center border border-white/60">
+          <span className="text-2xl" aria-hidden="true">
+            🎉
+          </span>
         </div>
       </motion.div>
       <motion.div
@@ -72,33 +49,10 @@ export default function HeroSection() {
         }}
         className="absolute bottom-36 right-[6%] hidden lg:block z-10"
       >
-        <div className="w-14 h-14 bg-sage/30 backdrop-blur-sm rounded-full shadow-cozy flex items-center justify-center border border-sage/50">
-          <svg
-            viewBox="0 0 36 36"
-            className="w-7 h-7"
-            fill="none"
-            aria-hidden="true"
-          >
-            <ellipse
-              cx="18"
-              cy="18"
-              rx="10"
-              ry="14"
-              fill="oklch(0.75 0.09 145)"
-              opacity="0.65"
-              transform="rotate(-20, 18, 18)"
-            />
-            <line
-              x1="18"
-              y1="4"
-              x2="18"
-              y2="32"
-              stroke="oklch(0.55 0.1 140)"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              transform="rotate(-20, 18, 18)"
-            />
-          </svg>
+        <div className="w-14 h-14 bg-white/70 backdrop-blur-sm rounded-full shadow-cozy flex items-center justify-center border border-white/50">
+          <span className="text-xl" aria-hidden="true">
+            😂
+          </span>
         </div>
       </motion.div>
       <motion.div
@@ -111,93 +65,26 @@ export default function HeroSection() {
         }}
         className="absolute top-44 right-[28%] hidden xl:block z-10"
       >
-        <div className="w-12 h-12 bg-blush/60 backdrop-blur-sm rounded-full shadow-xs flex items-center justify-center border border-rose-100/70">
-          <svg
-            viewBox="0 0 32 32"
-            className="w-6 h-6"
-            fill="none"
-            aria-hidden="true"
-          >
-            <circle
-              cx="16"
-              cy="16"
-              r="5"
-              fill="oklch(0.72 0.1 10)"
-              opacity="0.8"
-            />
-            <ellipse
-              cx="16"
-              cy="8"
-              rx="3"
-              ry="5"
-              fill="oklch(0.88 0.06 15)"
-              opacity="0.7"
-              transform="rotate(0, 16, 16)"
-            />
-            <ellipse
-              cx="16"
-              cy="8"
-              rx="3"
-              ry="5"
-              fill="oklch(0.88 0.06 15)"
-              opacity="0.7"
-              transform="rotate(45, 16, 16)"
-            />
-            <ellipse
-              cx="16"
-              cy="8"
-              rx="3"
-              ry="5"
-              fill="oklch(0.88 0.06 15)"
-              opacity="0.7"
-              transform="rotate(90, 16, 16)"
-            />
-            <ellipse
-              cx="16"
-              cy="8"
-              rx="3"
-              ry="5"
-              fill="oklch(0.88 0.06 15)"
-              opacity="0.7"
-              transform="rotate(135, 16, 16)"
-            />
-            <ellipse
-              cx="16"
-              cy="8"
-              rx="3"
-              ry="5"
-              fill="oklch(0.88 0.06 15)"
-              opacity="0.7"
-              transform="rotate(180, 16, 16)"
-            />
-            <ellipse
-              cx="16"
-              cy="8"
-              rx="3"
-              ry="5"
-              fill="oklch(0.88 0.06 15)"
-              opacity="0.7"
-              transform="rotate(225, 16, 16)"
-            />
-            <ellipse
-              cx="16"
-              cy="8"
-              rx="3"
-              ry="5"
-              fill="oklch(0.88 0.06 15)"
-              opacity="0.7"
-              transform="rotate(270, 16, 16)"
-            />
-            <ellipse
-              cx="16"
-              cy="8"
-              rx="3"
-              ry="5"
-              fill="oklch(0.88 0.06 15)"
-              opacity="0.7"
-              transform="rotate(315, 16, 16)"
-            />
-          </svg>
+        <div className="w-12 h-12 bg-white/70 backdrop-blur-sm rounded-full shadow-xs flex items-center justify-center border border-white/60">
+          <span className="text-lg" aria-hidden="true">
+            💜
+          </span>
+        </div>
+      </motion.div>
+      <motion.div
+        animate={{ y: [5, -8, 5], rotate: [-10, -6, -10] }}
+        transition={{
+          duration: 4.1,
+          repeat: Number.POSITIVE_INFINITY,
+          ease: "easeInOut",
+          delay: 2.1,
+        }}
+        className="absolute top-56 right-[40%] hidden xl:block z-10"
+      >
+        <div className="w-10 h-10 bg-white/65 backdrop-blur-sm rounded-full shadow-xs flex items-center justify-center border border-white/50">
+          <span className="text-base" aria-hidden="true">
+            ✨
+          </span>
         </div>
       </motion.div>
 
@@ -217,7 +104,7 @@ export default function HeroSection() {
             className="inline-flex items-center gap-2 bg-white/75 backdrop-blur-md rounded-full px-4 py-1.5 text-sm font-body font-semibold text-primary mb-7 shadow-cozy border border-white/60"
           >
             <Sparkles className="w-3.5 h-3.5" />
-            Original designs by Revnya
+            Original designs by Sticknest
           </motion.div>
 
           {/* Headline */}
@@ -231,11 +118,11 @@ export default function HeroSection() {
             }}
             className="font-display text-5xl sm:text-6xl lg:text-[4.25rem] font-semibold leading-[1.07] tracking-tight mb-6 text-foreground"
           >
-            <span className="text-gradient italic">Revnya</span>
+            <span className="text-gradient italic">Sticknest</span>
             <br />
-            Stickers for the{" "}
+            Where every sticker{" "}
             <span className="not-italic inline-block origin-center hover:animate-float">
-              artful soul
+              finds a home
             </span>
           </motion.h1>
 
@@ -250,8 +137,8 @@ export default function HeroSection() {
             }}
             className="font-body text-lg text-foreground/72 mb-10 max-w-[26rem] leading-[1.7]"
           >
-            Every sticker tells a story. Botanical, expressive, and quietly
-            beautiful — peel one off and let it speak for you.
+            A cozy nest full of funny, expressive stickers. Pick your favorites,
+            peel them off, and stick your personality everywhere.
           </motion.p>
 
           {/* CTA row */}
@@ -271,8 +158,8 @@ export default function HeroSection() {
               onClick={scrollToCatalog}
               className="rounded-2xl font-body font-semibold text-base px-9 h-14 bg-primary text-primary-foreground shadow-cozy hover:shadow-cozy-hover hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 gap-2.5"
             >
-              <Leaf className="w-4 h-4 opacity-80" />
-              Explore the Collection
+              <Home className="w-4 h-4 opacity-80" />
+              Browse the Nest
             </Button>
             <Button
               data-ocid="hero.secondary_button"
@@ -290,7 +177,7 @@ export default function HeroSection() {
             </Button>
           </motion.div>
 
-          {/* Botanical stat chips */}
+          {/* Fun chips */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -298,9 +185,9 @@ export default function HeroSection() {
             className="flex flex-wrap gap-2.5"
           >
             {[
-              { icon: "🌿", label: "Botanical" },
-              { icon: "🎨", label: "Artistic" },
-              { icon: "✦", label: "Expressive" },
+              { icon: "🏠", label: "Cozy" },
+              { icon: "😂", label: "Funny" },
+              { icon: "✨", label: "Expressive" },
             ].map((chip) => (
               <div
                 key={chip.label}
@@ -331,7 +218,7 @@ export default function HeroSection() {
         >
           <path
             d="M0 72L48 64C96 56 192 40 288 36C384 32 480 40 576 44C672 48 768 48 864 42C960 36 1056 22 1152 16C1248 10 1344 12 1392 13L1440 14V72H0Z"
-            fill="oklch(0.97 0.015 15)"
+            fill="oklch(0.99 0.005 90)"
           />
         </svg>
       </div>

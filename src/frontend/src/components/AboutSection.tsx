@@ -1,38 +1,38 @@
-import { Feather, Heart, Leaf, Palette, Send, Sparkles } from "lucide-react";
+import { Feather, Palette, Send, Smile, Sparkles } from "lucide-react";
 import { motion } from "motion/react";
 
 const values = [
   {
-    icon: Palette,
-    title: "Born from Art",
+    icon: Smile,
+    title: "Born from Joy",
     description:
-      "Each design starts as a sketch, refined into something you'll want to stick everywhere.",
-    color: "text-[oklch(0.52_0.1_10)]",
-    bg: "bg-[oklch(0.94_0.04_15)]",
+      "Every design starts with a feeling — fun, funny, or full of color. If it makes me smile, it becomes a sticker.",
+    color: "text-[oklch(0.52_0.14_75)]",
+    bg: "bg-[oklch(0.94_0.05_80)]",
   },
   {
-    icon: Leaf,
-    title: "Inspired by Nature",
+    icon: Palette,
+    title: "Colorful & Bright",
     description:
-      "Botanicals, florals, and the quiet beauty of the natural world inform every collection.",
-    color: "text-[oklch(0.48_0.09_145)]",
-    bg: "bg-[oklch(0.92_0.04_145)]",
+      "Bold colors, playful shapes, and loads of personality. Life is too short for boring stickers.",
+    color: "text-[oklch(0.5_0.14_50)]",
+    bg: "bg-[oklch(0.93_0.05_60)]",
   },
   {
     icon: Feather,
-    title: "Crafted with Intention",
+    title: "Made with Care",
     description:
-      "Details matter. Every curve, color, and composition is considered before it becomes a sticker.",
-    color: "text-[oklch(0.5_0.08_60)]",
-    bg: "bg-[oklch(0.94_0.04_60)]",
+      "Every detail is considered. Every curve and color is chosen to make you feel something good.",
+    color: "text-[oklch(0.48_0.1_100)]",
+    bg: "bg-[oklch(0.93_0.04_100)]",
   },
   {
     icon: Send,
-    title: "Made to Be Shared",
+    title: "Stick It Everywhere",
     description:
-      "Stickers are made to travel. Put them on your journal, your laptop, or give one to a friend.",
-    color: "text-[oklch(0.52_0.12_350)]",
-    bg: "bg-[oklch(0.94_0.04_350)]",
+      "Stickers are made to travel. Slap them on your journal, your laptop, your water bottle — let them go places.",
+    color: "text-[oklch(0.5_0.12_290)]",
+    bg: "bg-[oklch(0.94_0.04_290)]",
   },
 ];
 
@@ -42,9 +42,9 @@ export default function AboutSection() {
       id="about"
       className="py-24 gradient-section relative overflow-hidden"
     >
-      {/* Decorative botanical orbs */}
-      <div className="absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl opacity-25 bg-[oklch(0.88_0.055_145)]" />
-      <div className="absolute bottom-0 left-0 w-80 h-80 rounded-full blur-3xl opacity-20 bg-[oklch(0.9_0.04_15)]" />
+      {/* Decorative warm orbs */}
+      <div className="absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl opacity-25 bg-[oklch(0.88_0.07_75)]" />
+      <div className="absolute bottom-0 left-0 w-80 h-80 rounded-full blur-3xl opacity-20 bg-[oklch(0.9_0.06_60)]" />
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <div className="max-w-5xl mx-auto">
@@ -61,20 +61,19 @@ export default function AboutSection() {
               My Story
             </div>
             <h2 className="font-display text-4xl sm:text-5xl font-semibold text-foreground mb-6">
-              Designs Rooted in{" "}
-              <span className="italic text-primary">Beauty</span>
+              Stickers Stuck{" "}
+              <span className="italic text-primary">with Love</span>
             </h2>
             <p className="font-body text-lg text-foreground/70 leading-relaxed max-w-2xl mx-auto">
-              I create stickers full of personality — from dreamy botanicals to
-              bold expressions and uplifting phrases. Each design starts as a
-              spark of inspiration and becomes a tiny piece of art I'm proud to
-              share with the world.
+              I create stickers full of personality — from funny expressions to
+              colorful art and uplifting phrases. Each design is a tiny burst of
+              joy I love to share with the world.
               <br />
               <br />
               My stickers are perfect for decorating journals, water bottles,
-              laptops, planners, and everything in between. This is my creative
-              showcase — a little corner of the internet where I share the
-              designs I pour my heart into.
+              laptops, planners, and everything in between. Sticknest is my cozy
+              corner of the internet — a warm home for all the stickers I pour
+              my heart into.
             </p>
           </motion.div>
 

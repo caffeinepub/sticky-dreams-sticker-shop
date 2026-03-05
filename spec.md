@@ -1,42 +1,39 @@
-# Sticky Dreams Sticker Showcase
+# Sticknest
 
 ## Current State
-- Sticker showcase site with hero, featured section, catalog, about, footer
-- Admin panel at `/admin` locked by a hardcoded 4-digit PIN (`1234`)
-- PIN is hardcoded in `AdminPage.tsx` – cannot be changed by the user
-- Stickers have: id, title, description, category (4 fixed categories), imageUrl, featured, price, amazonLink, pinterestLink, createdAt
-- `StickerFormModal` only supports image uploads (no video)
-- Categories are fixed: Cute Animals, Floral, Fun Phrases, Seasonal
-- No video support anywhere in the stack
-- Background uses blush pinks / lavender palette
+A sticker showcase website with a warm honey-amber palette. Features:
+- Hero section, featured section, full catalog, about section, brand values section, footer
+- Admin panel at /admin with PIN auth, sticker add/edit/delete, featured toggle, seed, change PIN, site link, social links
+- Stickers organized by category (free text field)
+- The word "Colourful" still appears as a chip in HeroSection
+- The background/palette is warm honey-amber (cozy but not super fun/vibrant)
+- CatalogSection shows all stickers in a flat grid with no folder/category grouping sections
 
 ## Requested Changes (Diff)
 
 ### Add
-- **Video support**: Each sticker item can optionally have a video (short clip like a WhatsApp sticker or funny video). `Sticker` type gains a `videoUrl: Text` field.
-- **Video upload in admin form**: File picker supports both image and video files. Video preview plays inline (muted, looping). Admin can add/replace/remove video separately from image.
-- **Video display on public pages**: StickerCard shows a play icon overlay if a video is present. Clicking a card that has video opens a modal that plays the video (with controls, muted autoplay loop). Image is used as poster/fallback.
-- **PIN change feature in admin panel**: A "Change PIN" section in the admin dashboard that lets the admin enter current PIN, new PIN, confirm new PIN, and save. New PIN replaces old one (stored in localStorage). Works like Instagram/Facebook password change flow.
-- **Free-form custom categories**: Replace the 4 fixed categories dropdown with a free-text input so the admin can type any category name they want.
-- **Light, fun, eye-comfortable background**: Warm soft cream/white with gentle pastel accents – not pink/lavender. Think warm sunlight, lemon yellow, mint, soft sky – feels funny, lively but gentle on the eyes.
+- **Folder system in admin**: A "Folders" section in the admin panel where admin can create new folders (custom category names) and delete empty ones. Folders are stored in localStorage.
+- **Category-based sections on homepage**: CatalogSection should read all unique categories from stickers and render each as its own titled section (e.g. "Funny", "Desi Vibes"). Empty folders (no stickers) are hidden on public site.
+- **Fun, vibrant background**: New color palette — bright, eye-catching, fun vibe that makes visitors want to return. Think bold purples, electric blues, lively pinks, or warm sunset gradients — energetic not muted. Keep readability and cozy feel but add playful energy.
+- **Fun micro-interactions**: Bouncy sticker hover effects, confetti/sparkle animations, playful section transitions.
 
 ### Modify
-- `Sticker` backend type: add `videoUrl: Text` field
-- `StickerFormModal`: add video upload section (file input + preview), replace category Select with free-text Input
-- `StickerCard`: show video indicator badge/overlay; modal shows video player if videoUrl present
-- `AdminPage`: add "Change PIN" tab/section; remove hardcoded PIN, read from localStorage with fallback `"1234"`
-- Color palette in `index.css`: shift to warm cream/lemon/mint palette
-- Stats card in AdminPage: replace "Categories" with "Videos" count
+- **Remove "Colourful" chip** from HeroSection hero chips (keep "Cozy" and "Expressive", optionally replace with something fun)
+- **New logo** (generated): Fun, playful nest-with-stickers logo to match new vibe
+- **New hero image**: Fun, vibrant background matching new palette
+- **Update CSS palette** in index.css to match fun/vibrant direction
+- **CatalogSection**: Instead of flat grid, render grouped sections by category — each category gets a header and its own sticker row/grid. A flat "All Stickers" fallback for uncategorized.
+- **AdminPage**: Add a "Folders" card section with create/delete folder functionality stored in localStorage.
 
 ### Remove
-- Fixed `CATEGORIES` array in `StickerFormModal`
-- Price, amazonLink, pinterestLink fields (already empty strings – ensure they remain invisible/removed from UI)
+- Nothing to remove beyond the "Colourful" chip
 
 ## Implementation Plan
-1. Update `main.mo`: add `videoUrl` field to `Sticker` type and all related functions
-2. Regenerate `backend.d.ts` to reflect the new field
-3. Update `index.css`: replace color tokens with warm cream/lemon/mint palette
-4. Update `StickerFormModal`: add video upload, replace category dropdown with text input
-5. Update `StickerCard`: show video play overlay, update modal to show video player
-6. Update `AdminPage`: add Change PIN section, read PIN from localStorage, update stats
-7. Update `CatalogSection`/`FeaturedSection` if category filter tabs need updating (remove fixed categories, show dynamic ones or remove filter entirely)
+1. Generate new fun Sticknest logo and hero image
+2. Update index.css color palette to vibrant fun direction
+3. Update tailwind.config.js shadows/colors to match new palette
+4. Update HeroSection: remove "Colourful" chip, swap hero image reference, update chip icons
+5. Update CatalogSection: group stickers by category into separate titled sections
+6. Add folder management to AdminPage: "Folders" card with create/delete, stored in localStorage (FOLDERS_KEY)
+7. Admin sticker form: show existing folders as quick-select suggestions for category field
+8. All copy/branding stays Sticknest — no Revnya/Sticknest brand name changes needed

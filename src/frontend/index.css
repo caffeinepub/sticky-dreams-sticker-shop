@@ -39,63 +39,63 @@
   :root {
     --radius: 1rem;
 
-    /* ── Reunya Blush-Pink Botanical Palette ─── */
-    --background: 0.97 0.015 15;
-    --foreground: 0.18 0.02 30;
+    /* ── Sticknest Fun Vibrant Palette ─── */
+    --background: 0.99 0.005 90;
+    --foreground: 0.18 0.03 290;
 
-    --card: 0.99 0.008 20;
-    --card-foreground: 0.18 0.02 30;
+    --card: 0.995 0.004 285;
+    --card-foreground: 0.18 0.03 290;
 
-    --popover: 0.995 0.005 20;
-    --popover-foreground: 0.18 0.02 30;
+    --popover: 0.997 0.003 285;
+    --popover-foreground: 0.18 0.03 290;
 
-    /* Primary: dusty rose / mauve pink */
-    --primary: 0.62 0.1 10;
-    --primary-foreground: 0.99 0.005 20;
+    /* Primary: electric purple/violet */
+    --primary: 0.58 0.22 290;
+    --primary-foreground: 0.99 0 0;
 
-    /* Secondary: warm parchment */
-    --secondary: 0.94 0.02 25;
-    --secondary-foreground: 0.22 0.03 30;
+    /* Secondary: soft lavender */
+    --secondary: 0.94 0.05 285;
+    --secondary-foreground: 0.28 0.1 290;
 
-    /* Muted: pale blush */
-    --muted: 0.95 0.012 15;
-    --muted-foreground: 0.5 0.025 20;
+    /* Muted: light purple-tinted */
+    --muted: 0.96 0.02 285;
+    --muted-foreground: 0.52 0.06 285;
 
-    /* Accent: sage botanical green */
-    --accent: 0.88 0.055 145;
-    --accent-foreground: 0.2 0.06 140;
+    /* Accent: hot pink/fuchsia */
+    --accent: 0.65 0.22 340;
+    --accent-foreground: 0.99 0 0;
 
     /* Destructive */
     --destructive: 0.57 0.22 25;
     --destructive-foreground: 0.99 0 0;
 
-    --border: 0.88 0.02 15;
-    --input: 0.92 0.015 20;
-    --ring: 0.62 0.1 10;
+    --border: 0.9 0.03 285;
+    --input: 0.93 0.025 285;
+    --ring: 0.58 0.22 290;
 
     /* Charts */
-    --chart-1: 0.62 0.1 10;
-    --chart-2: 0.68 0.08 145;
-    --chart-3: 0.65 0.06 60;
-    --chart-4: 0.75 0.08 30;
-    --chart-5: 0.58 0.12 350;
+    --chart-1: 0.58 0.22 290;
+    --chart-2: 0.65 0.22 340;
+    --chart-3: 0.72 0.18 55;
+    --chart-4: 0.6 0.18 200;
+    --chart-5: 0.7 0.15 150;
 
     /* Sidebar */
-    --sidebar: 0.97 0.015 15;
-    --sidebar-foreground: 0.18 0.02 30;
-    --sidebar-primary: 0.62 0.1 10;
-    --sidebar-primary-foreground: 0.99 0.005 20;
-    --sidebar-accent: 0.88 0.055 145;
-    --sidebar-accent-foreground: 0.2 0.06 140;
-    --sidebar-border: 0.88 0.02 15;
-    --sidebar-ring: 0.62 0.1 10;
+    --sidebar: 0.99 0.005 90;
+    --sidebar-foreground: 0.18 0.03 290;
+    --sidebar-primary: 0.58 0.22 290;
+    --sidebar-primary-foreground: 0.99 0 0;
+    --sidebar-accent: 0.65 0.22 340;
+    --sidebar-accent-foreground: 0.99 0 0;
+    --sidebar-border: 0.9 0.03 285;
+    --sidebar-ring: 0.58 0.22 290;
 
     /* Custom extras */
-    --blush: 0.92 0.03 15;
-    --rose: 0.62 0.1 10;
-    --sage: 0.78 0.07 145;
-    --parchment: 0.97 0.015 15;
-    --ink: 0.18 0.02 30;
+    --violet: 0.58 0.22 290;
+    --fuchsia: 0.65 0.22 340;
+    --sunny: 0.88 0.18 85;
+    --lavender: 0.94 0.05 285;
+    --ink: 0.18 0.03 290;
   }
 
   * {
@@ -128,32 +128,32 @@
   .gradient-hero {
     background: linear-gradient(
       105deg,
-      oklch(0.97 0.025 15 / 0.97) 0%,
-      oklch(0.96 0.03 15 / 0.92) 30%,
-      oklch(0.93 0.04 145 / 0.3) 60%,
-      oklch(0.9 0.03 145 / 0.05) 100%
+      oklch(0.99 0.005 90 / 0.96) 0%,
+      oklch(0.97 0.02 290 / 0.88) 30%,
+      oklch(0.94 0.06 285 / 0.3) 60%,
+      oklch(0.9 0.04 285 / 0.05) 100%
     );
   }
 
   .gradient-section {
     background: linear-gradient(
       160deg,
-      oklch(0.97 0.015 15) 0%,
-      oklch(0.96 0.025 20) 40%,
-      oklch(0.94 0.04 145) 100%
+      oklch(0.99 0.005 90) 0%,
+      oklch(0.97 0.015 290) 40%,
+      oklch(0.95 0.04 285) 100%
     );
   }
 
   .gradient-featured {
     background: linear-gradient(
       135deg,
-      oklch(0.95 0.04 15) 0%,
-      oklch(0.91 0.05 145) 100%
+      oklch(0.96 0.04 290) 0%,
+      oklch(0.92 0.08 340) 100%
     );
   }
 
   .text-gradient {
-    background: linear-gradient(135deg, oklch(0.52 0.12 10), oklch(0.5 0.08 145));
+    background: linear-gradient(135deg, oklch(0.58 0.22 290), oklch(0.65 0.22 340));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -175,7 +175,7 @@
 
   .sticker-pop:hover {
     transform: scale(1.04) rotate(-1deg);
-    box-shadow: 0 12px 40px oklch(0.62 0.1 10 / 0.2);
+    box-shadow: 0 12px 40px oklch(0.58 0.22 290 / 0.22);
   }
 }
 
@@ -186,14 +186,14 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: oklch(0.96 0.01 15);
+  background: oklch(0.97 0.01 285);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: oklch(0.82 0.07 15);
+  background: oklch(0.8 0.1 290);
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.62 0.1 10);
+  background: oklch(0.58 0.22 290);
 }

@@ -33,9 +33,9 @@ export default function Navbar() {
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 shrink-0">
           <img
-            src="/assets/uploads/WhatsApp-Image-2026-03-03-at-22.04.42-1.jpeg"
-            alt="Revnya"
-            className="h-12 w-auto rounded-xl"
+            src="/assets/generated/sticknest-logo-fun-transparent.dim_400x200.png"
+            alt="Sticknest"
+            className="h-12 w-auto"
           />
         </Link>
 

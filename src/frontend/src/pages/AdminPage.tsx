@@ -26,6 +26,8 @@ import { Link } from "@tanstack/react-router";
 import {
   ArrowLeft,
   ExternalLink,
+  FolderOpen,
+  FolderPlus,
   KeyRound,
   Loader2,
   Lock,
@@ -37,6 +39,7 @@ import {
   Star,
   StarOff,
   Trash2,
+  X,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
@@ -58,6 +61,18 @@ const SITE_LINK_KEY = "stickerOnlineSiteLink";
 const SITE_LINK_LABEL_KEY = "stickerOnlineSiteLinkLabel";
 const PINTEREST_LINK_KEY = "stickerPinterestLink";
 const INSTAGRAM_LINK_KEY = "stickerInstagramLink";
+const FOLDERS_KEY = "sticknestFolders";
+
+function getStoredFolders(): string[] {
+  try {
+    const raw = localStorage.getItem(FOLDERS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
 
 function getStoredPin(): string {
   return localStorage.getItem(PIN_KEY) ?? "1234";
@@ -93,6 +108,10 @@ export default function AdminPage() {
   const [instagramLink, setInstagramLink] = useState(
     () => localStorage.getItem(INSTAGRAM_LINK_KEY) ?? "",
   );
+
+  // Folders state
+  const [folders, setFolders] = useState<string[]>(getStoredFolders);
+  const [newFolderName, setNewFolderName] = useState("");
 
   const { data: stickers, isLoading: isLoadingStickers } = useAllStickers();
   const seedMutation = useSeedStickers();
@@ -213,6 +232,28 @@ export default function AdminPage() {
     toast.success(
       "Social links saved! They are now clickable in the footer 🌐",
     );
+  };
+
+  const handleAddFolder = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = newFolderName.trim();
+    if (!trimmed) return;
+    if (folders.some((f) => f.toLowerCase() === trimmed.toLowerCase())) {
+      toast.error("A folder with that name already exists.");
+      return;
+    }
+    const updated = [...folders, trimmed];
+    setFolders(updated);
+    localStorage.setItem(FOLDERS_KEY, JSON.stringify(updated));
+    setNewFolderName("");
+    toast.success(`Folder "${trimmed}" created! 📁`);
+  };
+
+  const handleDeleteFolder = (name: string) => {
+    const updated = folders.filter((f) => f !== name);
+    setFolders(updated);
+    localStorage.setItem(FOLDERS_KEY, JSON.stringify(updated));
+    toast.success(`Folder "${name}" removed.`);
   };
 
   const videoCount = stickers?.filter((s) => getVideoUrl(s) !== "").length ?? 0;
@@ -401,6 +442,99 @@ export default function AdminPage() {
               </div>
             </div>
           ))}
+        </motion.div>
+
+        {/* ── Folders card ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.04 }}
+          className="cozy-card overflow-hidden"
+        >
+          <div className="px-6 py-4 border-b border-border flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
+              <FolderOpen className="w-4 h-4 text-primary" />
+            </div>
+            <div>
+              <h2 className="font-heading font-semibold text-foreground">
+                Folders
+              </h2>
+              <p className="font-body text-xs text-muted-foreground">
+                Organize stickers into sections on the homepage
+              </p>
+            </div>
+          </div>
+
+          <div className="p-6 space-y-5">
+            {/* Help text */}
+            <div className="bg-secondary/60 rounded-2xl px-4 py-3 border border-border/50">
+              <p className="font-body text-xs text-foreground/65 leading-relaxed">
+                💡 Folders organize your stickers into sections on the homepage.
+                Add stickers to a folder by setting the{" "}
+                <strong>matching category</strong> when uploading.
+              </p>
+            </div>
+
+            {/* Add folder form */}
+            <form onSubmit={handleAddFolder} className="flex gap-2">
+              <div className="flex-1">
+                <input
+                  data-ocid="admin.folder_input"
+                  type="text"
+                  placeholder="New folder name (e.g. Funny, Cute Animals…)"
+                  value={newFolderName}
+                  onChange={(e) => setNewFolderName(e.target.value)}
+                  maxLength={40}
+                  className="w-full h-10 rounded-xl border border-input bg-background px-3 py-2 text-sm font-body text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors"
+                  autoComplete="off"
+                />
+              </div>
+              <Button
+                type="submit"
+                data-ocid="admin.add_folder_button"
+                size="sm"
+                disabled={!newFolderName.trim()}
+                className="rounded-xl font-body gap-2 bg-primary text-primary-foreground h-10 px-4 shrink-0"
+              >
+                <FolderPlus className="w-3.5 h-3.5" />
+                Add
+              </Button>
+            </form>
+
+            {/* Existing folders */}
+            {folders.length === 0 ? (
+              <div className="text-center py-6 text-muted-foreground">
+                <FolderOpen className="w-8 h-8 mx-auto mb-2 opacity-30" />
+                <p className="font-body text-sm">
+                  No folders yet — add one above to create sections on your
+                  site.
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {folders.map((folder, index) => (
+                  <div
+                    key={folder}
+                    data-ocid={`admin.folder.item.${index + 1}`}
+                    className="flex items-center gap-2 bg-secondary rounded-full px-3.5 py-1.5 border border-border/60 group"
+                  >
+                    <span className="font-body text-sm font-medium text-foreground">
+                      {folder}
+                    </span>
+                    <button
+                      type="button"
+                      data-ocid={`admin.folder.delete_button.${index + 1}`}
+                      onClick={() => handleDeleteFolder(folder)}
+                      className="w-4 h-4 rounded-full bg-foreground/10 hover:bg-destructive/20 hover:text-destructive flex items-center justify-center transition-colors"
+                      aria-label={`Remove folder ${folder}`}
+                    >
+                      <X className="w-2.5 h-2.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </motion.div>
 
         {/* ── Change PIN card ── */}
