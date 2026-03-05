@@ -66,6 +66,9 @@ const SECTION_EMOJIS: Record<string, string> = {
   motivational: "💪",
   aesthetic: "✨",
   meme: "😎",
+  desi: "🇵🇰",
+  hindi: "🇮🇳",
+  relatable: "🙈",
 };
 
 function getSectionEmoji(name: string): string {
@@ -163,7 +166,7 @@ export default function CatalogSection() {
               }}
               className="w-20 h-20 bg-secondary rounded-full flex items-center justify-center mb-4"
             >
-              <span className="text-3xl">🎨</span>
+              <span className="text-3xl">🏠</span>
             </motion.div>
             <h3 className="font-display text-2xl font-semibold text-foreground mb-2">
               The nest is waiting to be filled
@@ -285,10 +288,7 @@ export default function CatalogSection() {
                       initial={{ opacity: 0, y: 24 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
-                      transition={{
-                        duration: 0.55,
-                        ease: [0.22, 1, 0.36, 1],
-                      }}
+                      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
                     >
                       <div className="flex items-center gap-3 mb-7">
                         <div className="w-10 h-10 bg-accent/20 rounded-2xl flex items-center justify-center shrink-0">

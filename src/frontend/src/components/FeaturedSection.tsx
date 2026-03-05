@@ -35,11 +35,15 @@ export default function FeaturedSection() {
   return (
     <section
       id="featured"
-      className="py-20 gradient-featured relative overflow-hidden"
+      className="py-20 relative overflow-hidden"
+      style={{
+        background:
+          "linear-gradient(135deg, oklch(0.96 0.05 70) 0%, oklch(0.93 0.08 30) 100%)",
+      }}
     >
-      {/* Decorative botanical blobs */}
-      <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full blur-3xl opacity-35 bg-[oklch(0.88_0.055_145)]" />
-      <div className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full blur-3xl opacity-25 bg-[oklch(0.92_0.04_15)]" />
+      {/* Decorative warm blobs */}
+      <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full blur-3xl opacity-30 bg-[oklch(0.88_0.1_60)]" />
+      <div className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full blur-3xl opacity-20 bg-[oklch(0.9_0.08_30)]" />
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         {/* Section header */}
@@ -50,12 +54,12 @@ export default function FeaturedSection() {
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           className="text-center mb-14"
         >
-          <div className="inline-flex items-center gap-2 bg-white/60 backdrop-blur-sm rounded-full px-4 py-1.5 text-xs font-body font-bold uppercase tracking-widest text-primary mb-5 border border-white/60">
+          <div className="inline-flex items-center gap-2 bg-white/65 backdrop-blur-sm rounded-full px-4 py-1.5 text-xs font-body font-bold uppercase tracking-widest text-primary mb-5 border border-white/60">
             <Sparkles className="w-3 h-3" />
             Curated Picks
           </div>
           <h2 className="font-display text-4xl sm:text-5xl font-semibold text-foreground leading-[1.1] mb-4">
-            Featured Designs
+            Featured <span className="italic text-gradient">Designs</span>
           </h2>
           {/* Editorial rule */}
           <div className="flex items-center justify-center gap-3 mb-4">
@@ -64,7 +68,7 @@ export default function FeaturedSection() {
             <div className="h-px w-12 bg-primary/30" />
           </div>
           <p className="font-body text-muted-foreground text-base max-w-sm mx-auto leading-relaxed">
-            A selection of our most loved stickers from the collection.
+            A selection of the most loved stickers from the collection.
           </p>
         </motion.div>
 

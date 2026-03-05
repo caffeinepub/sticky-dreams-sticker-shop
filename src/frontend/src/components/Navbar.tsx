@@ -25,15 +25,19 @@ export default function Navbar() {
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-card/90 backdrop-blur-md shadow-cozy border-b border-border/50"
+          ? "bg-card/92 backdrop-blur-md shadow-cozy border-b border-border/50"
           : "bg-transparent"
       }`}
     >
       <nav className="container mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 shrink-0">
+        <Link
+          to="/"
+          className="flex items-center gap-2 shrink-0"
+          data-ocid="nav.link"
+        >
           <img
-            src="/assets/generated/sticknest-logo-fun-transparent.dim_400x200.png"
+            src="/assets/generated/sticknest-logo-new-transparent.dim_400x200.png"
             alt="Sticknest"
             className="h-12 w-auto"
           />
@@ -47,7 +51,7 @@ export default function Navbar() {
             onClick={() => scrollToSection("catalog")}
             className="px-4 py-2 rounded-xl text-sm font-body font-medium text-foreground/80 hover:text-primary hover:bg-primary/8 transition-colors"
           >
-            Collection
+            Browse Stickers
           </button>
           <button
             type="button"
@@ -63,7 +67,7 @@ export default function Navbar() {
             onClick={() => scrollToSection("about")}
             className="px-4 py-2 rounded-xl text-sm font-body font-medium text-foreground/80 hover:text-primary hover:bg-primary/8 transition-colors"
           >
-            About
+            My Story
           </button>
         </div>
 
@@ -97,7 +101,7 @@ export default function Navbar() {
               onClick={() => scrollToSection("catalog")}
               className="text-left px-4 py-3 rounded-xl font-body font-medium text-foreground/80 hover:text-primary hover:bg-primary/8 transition-colors"
             >
-              Collection
+              Browse Stickers
             </button>
             <button
               type="button"
@@ -113,7 +117,7 @@ export default function Navbar() {
               onClick={() => scrollToSection("about")}
               className="text-left px-4 py-3 rounded-xl font-body font-medium text-foreground/80 hover:text-primary hover:bg-primary/8 transition-colors"
             >
-              About
+              My Story
             </button>
           </div>
         </motion.div>

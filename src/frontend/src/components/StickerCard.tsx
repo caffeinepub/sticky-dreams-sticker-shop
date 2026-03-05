@@ -6,6 +6,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Heart, Play, Star } from "lucide-react";
+import { motion } from "motion/react";
 import { useState } from "react";
 import type { Sticker } from "../backend.d";
 import { getVideoUrl } from "../utils/stickerHelpers";
@@ -22,12 +23,10 @@ export default function StickerCard({ sticker, featured }: StickerCardProps) {
   return (
     <>
       {/* Card — entire card is a click target for modal */}
-      <div
+      <motion.div
+        whileHover={{ y: -4, scale: 1.02 }}
+        transition={{ duration: 0.22, ease: [0.34, 1.56, 0.64, 1] }}
         className="cozy-card overflow-hidden group flex flex-col h-full cursor-pointer"
-        style={{
-          transition:
-            "transform 0.28s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.28s ease",
-        }}
         onClick={() => setOpen(true)}
         onKeyDown={(e) => e.key === "Enter" && setOpen(true)}
         // biome-ignore lint/a11y/useSemanticElements: card needs to be a div for layout
@@ -80,13 +79,13 @@ export default function StickerCard({ sticker, featured }: StickerCardProps) {
               Original design
             </span>
             {videoUrl && (
-              <span className="ml-auto font-body text-xs text-accent-foreground bg-accent/40 px-2 py-0.5 rounded-full">
+              <span className="ml-auto font-body text-xs text-accent-foreground bg-accent/20 px-2 py-0.5 rounded-full">
                 🎬 Video
               </span>
             )}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Product detail modal */}
       <Dialog open={open} onOpenChange={setOpen}>

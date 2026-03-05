@@ -8,11 +8,10 @@ const brandValues = [
     tagline: "Your Happy Little Nest",
     description:
       "Sticknest is your warm, cozy home for stickers that make you smile. Every visit should feel like finding something you didn't know you needed.",
-    color: "text-[oklch(0.42_0.14_290)]",
-    iconBg: "bg-[oklch(0.94_0.05_285)]",
-    cardBg: "bg-[oklch(0.97_0.02_285)]",
-    borderColor: "border-[oklch(0.88_0.04_285)]",
-    accentBar: "bg-[oklch(0.58_0.22_290)]",
+    color: "text-[oklch(0.45_0.14_55)]",
+    iconBg: "bg-[oklch(0.95_0.06_70)]",
+    cardBg: "bg-[oklch(0.98_0.03_75)]",
+    borderColor: "border-[oklch(0.9_0.05_70)]",
     decorEmoji: "🏠",
   },
   {
@@ -21,11 +20,10 @@ const brandValues = [
     tagline: "Every Sticker, a Canvas",
     description:
       "Created with creativity and a sense of beauty — each sticker is a small piece of art that shows personal style and intention.",
-    color: "text-[oklch(0.44_0.18_340)]",
-    iconBg: "bg-[oklch(0.94_0.06_340)]",
-    cardBg: "bg-[oklch(0.97_0.025_340)]",
-    borderColor: "border-[oklch(0.88_0.06_340)]",
-    accentBar: "bg-[oklch(0.65_0.22_340)]",
+    color: "text-[oklch(0.46_0.16_30)]",
+    iconBg: "bg-[oklch(0.95_0.07_30)]",
+    cardBg: "bg-[oklch(0.98_0.03_35)]",
+    borderColor: "border-[oklch(0.9_0.06_30)]",
     decorEmoji: "🎨",
   },
   {
@@ -34,11 +32,10 @@ const brandValues = [
     tagline: "Words You Can Peel & Stick",
     description:
       "Stickers that communicate feelings, moods, and personality — because sometimes a sticker says everything words can't. Peel it. Say it. Mean it.",
-    color: "text-[oklch(0.45_0.12_55)]",
-    iconBg: "bg-[oklch(0.95_0.06_60)]",
-    cardBg: "bg-[oklch(0.97_0.025_65)]",
-    borderColor: "border-[oklch(0.88_0.05_60)]",
-    accentBar: "bg-[oklch(0.72_0.18_55)]",
+    color: "text-[oklch(0.45_0.12_80)]",
+    iconBg: "bg-[oklch(0.95_0.06_80)]",
+    cardBg: "bg-[oklch(0.98_0.025_82)]",
+    borderColor: "border-[oklch(0.9_0.05_78)]",
     decorEmoji: "✨",
   },
 ];
@@ -71,23 +68,23 @@ export default function BrandValuesSection() {
       className="py-28 relative overflow-hidden"
       style={{
         background:
-          "linear-gradient(170deg, oklch(0.99 0.005 90) 0%, oklch(0.97 0.02 285) 35%, oklch(0.95 0.05 290 / 0.5) 65%, oklch(0.97 0.03 340 / 0.3) 100%)",
+          "linear-gradient(170deg, oklch(0.98 0.018 80) 0%, oklch(0.96 0.04 70) 40%, oklch(0.94 0.07 30 / 0.6) 75%, oklch(0.96 0.04 60 / 0.4) 100%)",
       }}
     >
       {/* Soft decorative orbs */}
       <div
         className="absolute -top-24 -left-16 w-[480px] h-[480px] rounded-full blur-3xl pointer-events-none"
-        style={{ background: "oklch(0.88 0.08 290 / 0.25)" }}
+        style={{ background: "oklch(0.9 0.08 60 / 0.22)" }}
         aria-hidden="true"
       />
       <div
         className="absolute -bottom-20 -right-12 w-[400px] h-[400px] rounded-full blur-3xl pointer-events-none"
-        style={{ background: "oklch(0.88 0.1 340 / 0.2)" }}
+        style={{ background: "oklch(0.9 0.08 30 / 0.2)" }}
         aria-hidden="true"
       />
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full blur-3xl pointer-events-none opacity-20"
-        style={{ background: "oklch(0.9 0.06 290 / 0.4)" }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full blur-3xl pointer-events-none opacity-15"
+        style={{ background: "oklch(0.88 0.1 55 / 0.4)" }}
         aria-hidden="true"
       />
 
@@ -102,7 +99,7 @@ export default function BrandValuesSection() {
             className="text-center mb-16"
           >
             {/* Eyebrow */}
-            <div className="inline-flex items-center gap-2.5 bg-white/70 backdrop-blur-sm rounded-full px-5 py-2 text-sm font-body font-semibold text-primary mb-5 border border-white/60 shadow-sm">
+            <div className="inline-flex items-center gap-2.5 bg-white/72 backdrop-blur-sm rounded-full px-5 py-2 text-sm font-body font-semibold text-primary mb-5 border border-white/60 shadow-sm">
               <span className="text-base leading-none">🎉</span>
               The Sticknest Way
             </div>
@@ -137,27 +134,21 @@ export default function BrandValuesSection() {
               >
                 {/* Subtle inner glow on hover */}
                 <div
-                  className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
+                  className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
                   style={{
                     background:
-                      "radial-gradient(circle at 30% 20%, oklch(1 0 0 / 0.5), transparent 65%)",
+                      "radial-gradient(circle at 30% 20%, oklch(1 0 0 / 0.45), transparent 65%)",
                   }}
                   aria-hidden="true"
                 />
 
-                {/* Decorative large emoji — soft, background layer */}
+                {/* Decorative large emoji */}
                 <div
                   className="absolute top-4 right-5 text-5xl opacity-10 group-hover:opacity-20 transition-opacity duration-300 select-none pointer-events-none"
                   aria-hidden="true"
                 >
                   {value.decorEmoji}
                 </div>
-
-                {/* Accent top bar */}
-                <div
-                  className={`absolute top-0 left-8 right-8 h-0.5 rounded-b-full ${value.accentBar} opacity-60 group-hover:opacity-100 transition-opacity duration-300`}
-                  aria-hidden="true"
-                />
 
                 {/* Icon */}
                 <div
@@ -199,7 +190,7 @@ export default function BrandValuesSection() {
             </p>
             <div className="flex items-center justify-center gap-3 mt-4">
               <div className="h-px w-16 bg-foreground/15 rounded-full" />
-              <span className="text-xl">🎉</span>
+              <span className="text-xl">🌟</span>
               <div className="h-px w-16 bg-foreground/15 rounded-full" />
             </div>
           </motion.div>

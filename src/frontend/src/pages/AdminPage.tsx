@@ -354,7 +354,7 @@ export default function AdminPage() {
       <div className="bg-card border-b border-border shadow-xs sticky top-0 z-40">
         <div className="container mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link to="/">
+            <Link to="/" data-ocid="admin.back_link">
               <Button
                 variant="ghost"
                 size="sm"

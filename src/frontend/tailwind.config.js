@@ -66,11 +66,11 @@ export default {
           border: "oklch(var(--sidebar-border))",
           ring: "oklch(var(--sidebar-ring))",
         },
-        violet: "oklch(var(--violet))",
-        fuchsia: "oklch(var(--fuchsia))",
-        sunny: "oklch(var(--sunny))",
-        lavender: "oklch(var(--lavender))",
-        ink: "oklch(var(--ink))",
+        // Custom Sticknest palette tokens
+        golden: "oklch(var(--golden))",
+        coral: "oklch(var(--coral))",
+        "nest-brown": "oklch(var(--nest-brown))",
+        "warm-white": "oklch(var(--warm-white))",
       },
       fontFamily: {
         display: ["Fraunces", "Georgia", "serif"],
@@ -87,11 +87,12 @@ export default {
       },
       boxShadow: {
         xs: "0 1px 2px 0 rgba(0,0,0,0.05)",
-        cozy: "0 4px 24px oklch(0.58 0.22 290 / 0.12), 0 1px 4px oklch(0.58 0.22 290 / 0.07)",
+        cozy: "0 4px 24px oklch(0.68 0.16 60 / 0.12), 0 1px 4px oklch(0.68 0.16 60 / 0.07)",
         "cozy-hover":
-          "0 12px 40px oklch(0.58 0.22 290 / 0.22), 0 4px 12px oklch(0.65 0.22 340 / 0.14)",
+          "0 12px 40px oklch(0.68 0.16 60 / 0.22), 0 4px 12px oklch(0.72 0.14 30 / 0.14)",
         "nest-glow":
-          "0 8px 32px oklch(0.65 0.22 340 / 0.28), 0 2px 8px oklch(0.58 0.22 290 / 0.18)",
+          "0 8px 32px oklch(0.72 0.14 30 / 0.28), 0 2px 8px oklch(0.68 0.16 60 / 0.18)",
+        warm: "0 4px 20px oklch(0.68 0.16 60 / 0.18), 0 2px 6px oklch(0.72 0.14 30 / 0.1)",
       },
       keyframes: {
         "accordion-down": {
@@ -110,9 +111,13 @@ export default {
           "0%": { opacity: "0", transform: "scale(0.5) rotate(-10deg)" },
           "100%": { opacity: "1", transform: "scale(1) rotate(0deg)" },
         },
-        bounce: {
+        "bounce-soft": {
           "0%, 100%": { transform: "translateY(0px) scale(1)" },
-          "50%": { transform: "translateY(-12px) scale(1.05)" },
+          "50%": { transform: "translateY(-10px) scale(1.03)" },
+        },
+        wiggle: {
+          "0%, 100%": { transform: "rotate(-2deg)" },
+          "50%": { transform: "rotate(2deg)" },
         },
       },
       animation: {
@@ -120,7 +125,8 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         float: "float 3s ease-in-out infinite",
         "sparkle-in": "sparkle-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)",
-        bounce: "bounce 2.5s ease-in-out infinite",
+        "bounce-soft": "bounce-soft 2.8s ease-in-out infinite",
+        wiggle: "wiggle 2s ease-in-out infinite",
       },
     },
   },
